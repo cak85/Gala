@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest package="de.cak85.gala"
+          xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <application
+        android:allowBackup="false"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".launcher.GameListActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".launcher.EditGamesActivity"
+            android:parentActivityName=".launcher.GameListActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.NoActionBar">
+
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".launcher.GameListActivity"/>
+        </activity>
+        <activity
+            android:name=".preferences.PreferencesActivity"
+            android:parentActivityName=".launcher.GameListActivity"
+            android:screenOrientation="landscape">
+
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".launcher.GameListActivity"/>
+        </activity>
+
+        <!--
+        <service
+            android:name=".service.BluetoothDetectionService"
+            android:exported="false"
+            android:process=":gala_bluetooth_detection_service" />
+
+        <receiver android:name=".receivers.BootCompletedReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        -->
+
+        <receiver android:name=".receivers.BluetoothDetectionReceiver">
+            <intent-filter>
+                <action android:name="android.bluetooth.device.action.ACL_CONNECTED"/>
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:name=".launcher.DetailsActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:parentActivityName=".launcher.GameListActivity"
+            android:screenOrientation="landscape">
+
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".launcher.GameListActivity"/>
+        </activity>
+    </application>
+
+</manifest>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_item_detail">Launcher for applications with gamepad support</string>
+    <string name="menu_editShownGames">Spiel hinzufügen</string>
+    <string name="pref_selected_bluetooth_devices_title">Überwachte Bluetooth-Geräte</string>
+    <string name="pref_selected_bluetooth_devices_summ">Wenn ein Bluetooth-Gerät ausgewählt wird, dann wird Gala gestartet, sobald sich dieses mit dem Gerät verbindet.</string>
+    <string name="pref_selected_bluetooth_devices_summ_concrete">Wenn %1$s verbunden %2$s, dann wird Gala gestartet.</string>
+    <string name="is_singular_auxiliary_verb">wird</string>
+    <string name="is_plural_auxiliary_verb">werden</string>
+    <string name="pref_bluetooth_detection_summ">Startet Gala, wenn ein ausgewähltes Bluetooth-Gerät sich verbindet.</string>
+    <string name="pref_bluetooth_detection_title">Bluetooth-Geräte-Erkennung</string>
+    <string name="error">Fehler</string>
+    <string name="bluetooth_not_supported">\"Bluetooth wird NICHT unterstützt!\"</string>
+    <string name="bluetooth_enable_error">Bluetooth konnte NICHT aktiviert werden!</string>
+    <string name="bluetooth_settings">Bluetooth-Einstellungen</string>
+    <string name="toolbar_title_manage_apps">Anwendungsverwaltung</string>
+    <string name="settings">Einstellungen</string>
+    <string name="app_default_description">Nicht gefunden im Google Play Store!</string>
+    <string name="autodiscover_dialog_title">Suche Spiele auf dem Gerät</string>
+    <string name="autodiscover_dialog_message">Einlesen aller Anwendungen</string>
+    <string name="autodiscover_dialog_message_checking">Überprüfe</string>
+    <string name="first_run_question">Möchten Sie, dass Gala nach allen auf dem Gerät installierten Spielen sucht?\nSie können auch später Spiele hinzufügen.</string>
+    <string name="menu_auto_discover_games">Spiele suchen</string>
+    <string name="discover_games_question">Möchten Sie, dass Gala nach allen auf dem Gerät installierten Spielen und bei Erfolg zu Ihrer Spieleliste hinzufügt?</string>
+</resources>

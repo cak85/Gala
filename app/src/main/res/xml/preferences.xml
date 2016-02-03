@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/bluetooth_settings">
+        <CheckBoxPreference
+            android:key="@string/pref_key_bluetooth_detection_service"
+            android:summary="@string/pref_bluetooth_detection_summ"
+            android:title="@string/pref_bluetooth_detection_title"
+            android:defaultValue="false" />
+        <de.cak85.gala.preferences.GalaMultiSelectListPreference
+            android:key="@string/pref_key_selected_bluetooth_devices"
+            android:title="@string/pref_selected_bluetooth_devices_title"
+            android:summary="@string/pref_selected_bluetooth_devices_summ"
+            android:enabled="false"
+            android:entryValues="@array/empty_array"
+            android:entries="@array/empty_array"
+            android:defaultValue="@array/empty_array"/>
+    </PreferenceCategory>
+</PreferenceScreen>
