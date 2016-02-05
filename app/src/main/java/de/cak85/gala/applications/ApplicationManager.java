@@ -32,9 +32,12 @@ import java.lang.reflect.Type;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import de.cak85.gala.R;
+import de.cak85.gala.applications.database.DBHelper;
 
 /**
  * Application manager is responsible application-wide for the applications.
@@ -302,52 +305,75 @@ public class ApplicationManager {
 		@Override
 		protected List<ApplicationItem> doInBackground(ApplicationItem... apps) {
 			List<ApplicationItem> games = new ArrayList<>();
-
-			outerloop:
+			final DBHelper dbHelper = DBHelper.getInstance(context);
+			Map<String, Boolean> categories = dbHelper.getCategories();
+			System.out.println("categories from db:"
+					+ Arrays.toString(categories.entrySet().toArray()));
 			for (ApplicationItem app : apps) {
 				publishProgress(app.getTitle());
 				Bitmap image = null;
 				String description = null;
-				try {
-					URL url = new URL(context.getString(R.string.scrapepage)
-							+ getCleanPackageName(app));
-					URLConnection urlConnection = url.openConnection();
-					BufferedReader bufferedReader = new BufferedReader(
-							new InputStreamReader(urlConnection.getInputStream()));
-					String line;
-					while ((line = bufferedReader.readLine()) != null) {
-						if (line.contains("data-expand-to=\"full-screenshot-0\"")) {
-							String imageSource = line.substring(
-									line.indexOf("data-expand-to=\"full-screenshot-0\""));
-							imageSource = imageSource.substring(imageSource.indexOf("src=\"") + 5);
-							imageSource = imageSource.substring(0, imageSource.indexOf("="));
-							imageSource = "https:" + imageSource + "=w" + imageWidth;
-							InputStream in = new URL(imageSource).openStream();
-							image = BitmapFactory.decodeStream(in);
-						}
-						if (line.contains("itemprop=\"description\"")) {
-							description =
-									line.substring(line.indexOf("itemprop=\"description\""));
-							description = description.substring(description.indexOf("div"));
-							description = description.substring(description.indexOf(">") + 1);
-							description = description.substring(0, description.indexOf("</div>"));
-						}
-						if (line.contains("class=\"document-subtitle category\"")) {
-							int index = line.indexOf("class=\"document-subtitle category\"");
-							if (index > -1) {
-								String category = line.substring(index);
-								category = category.substring(category.indexOf("href") + 6);
-								category = category.substring(0, category.indexOf("\""));
-								if (scrapeOnlyGames && !category.toLowerCase().contains("game")) {
-									continue outerloop;
+				// if we have saved the
+				final String packageName = app.getPackageName();
+				boolean checkedCategory = categories.containsKey(packageName);
+				boolean isGame = checkedCategory ? categories.get(packageName) : false;
+				if (checkedCategory) {
+					if (scrapeOnlyGames && !isGame) {
+						continue;
+					}
+					image = getImage(context, app);
+					description = dbHelper.getDescription(packageName);
+				}
+				if (!checkedCategory || image == null || description == null) {
+					try {
+						URL url = new URL(context.getString(R.string.scrapepage)
+								+ getCleanPackageName(app));
+						URLConnection urlConnection = url.openConnection();
+						BufferedReader bufferedReader = new BufferedReader(
+								new InputStreamReader(urlConnection.getInputStream()));
+						String line;
+						while ((line = bufferedReader.readLine()) != null) {
+							if (image == null
+									&& line.contains("data-expand-to=\"full-screenshot-0\"")) {
+								String imageSource = line.substring(
+										line.indexOf("data-expand-to=\"full-screenshot-0\""));
+								imageSource = imageSource.substring(imageSource.indexOf("src=\"")
+										+ 5);
+								imageSource = imageSource.substring(0, imageSource.indexOf("="));
+								imageSource = (imageSource.contains("http") ? "" : "https:")
+										+ imageSource + "=w" + imageWidth;
+								InputStream in = new URL(imageSource).openStream();
+								image = BitmapFactory.decodeStream(in);
+							}
+							if (description == null && line.contains("itemprop=\"description\"")) {
+								description =
+										line.substring(line.indexOf("itemprop=\"description\""));
+								description = description.substring(description.indexOf("div"));
+								description = description.substring(description.indexOf(">") + 1);
+								description = description.substring(0,
+										description.indexOf("</div>"));
+								dbHelper.saveDescription(packageName, description);
+							}
+							if (!checkedCategory
+									&& line.contains("class=\"document-subtitle category\"")) {
+								int index = line.indexOf("class=\"document-subtitle category\"");
+								if (index > -1) {
+									String category = line.substring(index);
+									category = category.substring(category.indexOf("href") + 6);
+									category = category.substring(0, category.indexOf("\""));
+									isGame = category.toLowerCase().contains("game");
+									dbHelper.saveCategory(packageName, isGame);
+									checkedCategory = true;
 								}
 							}
 						}
+						bufferedReader.close();
+					} catch (Exception e) {
+						System.err.println("could not find " + packageName + ".");
 					}
-					bufferedReader.close();
 				}
-				catch(Exception e) {
-					System.err.println(e.getMessage());
+				if (scrapeOnlyGames && !isGame) {
+					continue;
 				}
 				if (description != null) {
 					app.setDescription(description);
@@ -356,6 +382,16 @@ public class ApplicationManager {
 				}
 			}
 			return games;
+		}
+
+		Throwable getCause(Throwable e) {
+			Throwable cause = null;
+			Throwable result = e;
+
+			while(null != (cause = result.getCause())  && (result != cause) ) {
+				result = cause;
+			}
+			return result;
 		}
 
 		private String getCleanPackageName(ApplicationItem app) {
