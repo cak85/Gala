@@ -159,6 +159,7 @@ public class GameListActivity extends AppCompatActivity {
 					public void onPostExecute(
 							List<ApplicationItem> applicationItems) {
 						mAdapter.notifyDataSetChanged();
+						ApplicationManager.getInstance().save(GameListActivity.this);
 					}
 				});
 	}
