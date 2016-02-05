@@ -144,10 +144,10 @@ public class EditGamesActivity extends AppCompatActivity {
 					            games.add(holder.mItem);
 					            DisplayMetrics metrics = new DisplayMetrics();
 					            getWindowManager().getDefaultDisplay().getMetrics(metrics);
-					            ApplicationManager.getInstance().scrapeInfos(EditGamesActivity.this,
-							            metrics.widthPixels,
-							            holder.mItem,
-							            null);
+					            ApplicationManager.getInstance().retrieveInfos(EditGamesActivity.this,
+                                        metrics.widthPixels,
+                                        holder.mItem,
+                                        null);
 				            }
 				            notifyItemChanged(position);
 				            holder.mView.requestFocus();
@@ -171,10 +171,10 @@ public class EditGamesActivity extends AppCompatActivity {
 		                games.add(holder.mItem);
 		                DisplayMetrics metrics = new DisplayMetrics();
 		                getWindowManager().getDefaultDisplay().getMetrics(metrics);
-		                ApplicationManager.getInstance().scrapeInfos(EditGamesActivity.this,
-				                metrics.widthPixels,
-				                holder.mItem,
-				                null);
+		                ApplicationManager.getInstance().retrieveInfos(EditGamesActivity.this,
+                                metrics.widthPixels,
+                                holder.mItem,
+                                null);
 	                }
 	                System.out.println(games);
                 }

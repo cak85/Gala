@@ -217,10 +217,10 @@ public class ApplicationManager {
 		}
 	}
 
-	public void scrapeInfos(final Context context,
-	                        final int imageWidth,
-	                        final ApplicationItem applicationItem,
-	                        final AsyncTaskListener<List<ApplicationItem>, String> listener) {
+	public void retrieveInfos(final Context context,
+	                          final int imageWidth,
+	                          final ApplicationItem applicationItem,
+	                          final AsyncTaskListener<List<ApplicationItem>, String> listener) {
 		final RetrieveInfosTask asyncTask = new RetrieveInfosTask(context, imageWidth, false, listener);
 		asyncTask.execute(applicationItem);
 	}
