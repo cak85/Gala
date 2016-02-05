@@ -168,7 +168,14 @@ public class GameListActivity extends AppCompatActivity {
         startActivity(i);
     }
 
+	// used to prevent the dialog for discovering games can accidentally be shown twice.
+	private boolean dialogShown = false;
+
 	public void discoverGames(MenuItem item) {
+		if (dialogShown) {
+			return;
+		}
+		dialogShown = true;
 		DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
@@ -179,6 +186,12 @@ public class GameListActivity extends AppCompatActivity {
 			}
 		};
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+			@Override
+			public void onDismiss(DialogInterface dialog) {
+				dialogShown = false;
+			}
+		});
 		builder.setMessage(getString(R.string.discover_games_question))
 				.setPositiveButton(getString(android.R.string.yes),
 						dialogClickListener).setNegativeButton(getString(android.R.string.no),
