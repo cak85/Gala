@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">"Gala"</string>
+    <string name="app_name" translatable="false">"Gala"</string>
     <string name="title_item_detail">Launcher for applications with gamepad support</string>
     <string name="menu_editShownGames">Add Game</string>
     <string name="pref_selected_bluetooth_devices_title">Monitored Bluetooth Devices</string>
@@ -9,15 +9,15 @@
     <string name="is_plural_auxiliary_verb">are</string>
     <string name="pref_bluetooth_detection_summ">Starts GaLa when an selected bluetooth device is connected.</string>
     <string name="pref_bluetooth_detection_title">Bluetooth Device Detection</string>
-    <string name="pref_key_bluetooth_detection_service">pref_key_bluetooth_detection_service</string>
-    <string name="pref_key_selected_bluetooth_devices">pref_key_selected_bluetooth_devices</string>
+    <string name="pref_key_bluetooth_detection_service" translatable="false">pref_key_bluetooth_detection_service</string>
+    <string name="pref_key_selected_bluetooth_devices" translatable="false">pref_key_selected_bluetooth_devices</string>
     <string name="error">Error</string>
     <string name="bluetooth_not_supported">\"Bluetooth NOT support!\"</string>
     <string name="bluetooth_enable_error">Bluetooth could NOT be enabled!</string>
     <string name="bluetooth_settings">Bluetooth settings</string>
     <string name="toolbar_title_manage_apps">Manage apps</string>
     <string name="settings">Settings</string>
-    <string name="scrapepage">"https://play.google.com/store/apps/details?id="</string>
+    <string name="scrapepage" translatable="false">"https://play.google.com/store/apps/details?id="</string>
     <string name="app_default_description">Not found in Google Play Store!</string>
     <string name="autodiscover_dialog_title">Searching games on device</string>
     <string name="autodiscover_dialog_message">Retrieving all installed applications</string>
