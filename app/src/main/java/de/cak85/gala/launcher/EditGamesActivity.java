@@ -96,7 +96,7 @@ public class EditGamesActivity extends AppCompatActivity {
 		            Collections.sort(applications, new Comparator<ApplicationItem>() {
 			            @Override
 			            public int compare(ApplicationItem lhs, ApplicationItem rhs) {
-				            return collator.compare(lhs.getTitle(), rhs.getTitle());
+				            return collator.compare(lhs.getName(), rhs.getName());
 			            }
 		            });
 		            View progressbar = findViewById(R.id.edit_games_list_progressbar);
@@ -158,7 +158,7 @@ public class EditGamesActivity extends AppCompatActivity {
 	            }
             });
 	        holder.mImageView.setImageDrawable(mValues.get(position).getIcon());
-            holder.mTitleView.setText(mValues.get(position).getTitle());
+            holder.mTitleView.setText(mValues.get(position).getName());
 	        holder.mCheckbox.setOnCheckedChangeListener(null);
             holder.mCheckbox.setChecked(games.contains(holder.mItem));
             holder.mCheckbox.setOnCheckedChangeListener(

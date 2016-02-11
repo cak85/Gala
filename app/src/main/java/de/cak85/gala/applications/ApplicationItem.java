@@ -5,7 +5,6 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.DisplayMetrics;
@@ -15,9 +14,10 @@ import de.cak85.gala.R;
 
 public class ApplicationItem {
 
-	private final String title;
+	private final String name;
 	private final String packageName;
 	private transient Drawable icon;
+	private String title;
 	private String description;
 
 	public ApplicationItem(Context context, ApplicationInfo packageInfo, PackageManager pm) {
@@ -52,14 +52,14 @@ public class ApplicationItem {
 			}
 		}
 
-		this.title = pm.getApplicationLabel(packageInfo).toString();
+		this.name = pm.getApplicationLabel(packageInfo).toString();
 		this.packageName = packageInfo.packageName;
 		this.icon = icon;
 		this.description = context.getString(R.string.app_default_description);
 	}
 
-	public String getTitle() {
-		return title;
+	public String getName() {
+		return name;
 	}
 
 	public String getPackageName() {
@@ -94,7 +94,7 @@ public class ApplicationItem {
 	@Override
 	public String toString() {
 		return "ApplicationItem{" +
-				"title='" + title + '\'' +
+				"name='" + name + '\'' +
 				", packageName='" + packageName + '\'' +
 				'}';
 	}
@@ -107,4 +107,11 @@ public class ApplicationItem {
 		this.icon = icon;
 	}
 
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getTitle() {
+		return title;
+	}
 }

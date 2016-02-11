@@ -310,9 +310,10 @@ public class ApplicationManager {
 			System.out.println("categories from db:"
 					+ Arrays.toString(categories.entrySet().toArray()));
 			for (ApplicationItem app : apps) {
-				publishProgress(app.getTitle());
+				publishProgress(app.getName());
 				Bitmap image = null;
 				String description = null;
+				String title = null;
 				// if we have saved the
 				final String packageName = app.getPackageName();
 				boolean checkedCategory = categories.containsKey(packageName);
@@ -322,7 +323,6 @@ public class ApplicationManager {
 						continue;
 					}
 					image = getImage(context, app);
-					description = dbHelper.getDescription(packageName);
 				}
 				if (!checkedCategory || image == null || description == null) {
 					try {
@@ -345,6 +345,13 @@ public class ApplicationManager {
 								InputStream in = new URL(imageSource).openStream();
 								image = BitmapFactory.decodeStream(in);
 							}
+							if (title == null && line.contains("</title>")) {
+								title = line.substring(line.indexOf("</title>"));
+								title = title.substring(0, title.indexOf("description"));
+								title = title.substring(title.indexOf("content=\"")
+										+ "content=\"".length());
+								title = title.substring(0, title.indexOf("\""));
+							}
 							if (description == null && line.contains("itemprop=\"description\"")) {
 								description =
 										line.substring(line.indexOf("itemprop=\"description\""));
@@ -352,7 +359,6 @@ public class ApplicationManager {
 								description = description.substring(description.indexOf(">") + 1);
 								description = description.substring(0,
 										description.indexOf("</div>"));
-								dbHelper.saveDescription(packageName, description);
 							}
 							if (!checkedCategory
 									&& line.contains("class=\"document-subtitle category\"")) {
@@ -376,6 +382,7 @@ public class ApplicationManager {
 					continue;
 				}
 				if (description != null) {
+					app.setTitle(title);
 					app.setDescription(description);
 					ApplicationManager.getInstance().saveImage(context, app, image);
 					games.add(app);

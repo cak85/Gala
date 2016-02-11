@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
@@ -27,10 +26,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -215,7 +212,7 @@ public class GameListActivity extends AppCompatActivity {
         public void onBindViewHolder(final ViewHolder holder, int position) {
             holder.mItem = mValues.get(position);
             holder.mImageView.setImageDrawable(mValues.get(position).getIcon());
-            holder.mIdView.setText(mValues.get(position).getTitle());
+            holder.mIdView.setText(mValues.get(position).getName());
 //            holder.mContentView.setText(mValues.get(position).content);
 
             Palette palette = Palette.from(((BitmapDrawable)mValues.get(

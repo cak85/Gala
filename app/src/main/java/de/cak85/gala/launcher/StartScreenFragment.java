@@ -82,7 +82,7 @@ public class StartScreenFragment extends Fragment {
 		ImageView image = (ImageView) view.findViewById(R.id.startscreen_imageView);
 		image.setImageDrawable(gameItem.getIcon());
 		TextView text = (TextView) view.findViewById(R.id.startscreen_textView);
-		text.setText(gameItem.getTitle());
+		text.setText(gameItem.getName());
 		text.setTextColor(textColor);
 	}
 

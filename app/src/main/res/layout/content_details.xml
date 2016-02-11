@@ -14,11 +14,22 @@
         android:layout_height="match_parent">
 
         <TextView
+            android:id="@+id/details_content_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            android:text="This is a cool but also very long header that should line wrap and you know it!"
+            style="@android:style/TextAppearance.Large"
+            android:paddingRight="@dimen/title_padding_right"
+            android:layout_margin="@dimen/text_margin"/>
+
+        <TextView
             android:id="@+id/details_content_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/text_margin"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            android:layout_below="@+id/details_content_title"/>
 
         <me.zhanghai.android.materialprogressbar.MaterialProgressBar
             android:id="@+id/details_content_progressbar"

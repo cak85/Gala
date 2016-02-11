@@ -10,7 +10,6 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
@@ -47,7 +46,7 @@ public class DetailsActivity extends AppCompatActivity {
 		final String packageName = getIntent().getStringExtra("packageName");
 		app = ApplicationManager.getInstance().getGame(packageName);
 
-		setTitle(app.getTitle());
+		setTitle(app.getName());
 		final ImageView imageView = (ImageView) findViewById(R.id.details_image);
 		image = new BitmapDrawable(getResources(),
 				ApplicationManager.getInstance().getImage(this, app));
@@ -62,15 +61,15 @@ public class DetailsActivity extends AppCompatActivity {
 			imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 			transition.startTransition(500);
 		}
-		/*if (app.getDescription() != null) {*/
-			TextView textView = (TextView) findViewById(R.id.details_content_text);
-			textView.setText(Html.fromHtml(app.getDescription()));
-			View progressbar = findViewById(R.id.details_content_progressbar);
-			progressbar.setVisibility(View.GONE);
-			textView.setVisibility(View.VISIBLE);
-		/*} else {
-			scrape(app);
-		}*/
+
+		TextView titleView = (TextView) findViewById(R.id.details_content_title);
+		titleView.setText(app.getTitle());
+		TextView textView = (TextView) findViewById(R.id.details_content_text);
+		textView.setText(Html.fromHtml(app.getDescription()));
+		View progressbar = findViewById(R.id.details_content_progressbar);
+		progressbar.setVisibility(View.GONE);
+		textView.setVisibility(View.VISIBLE);
+
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 			getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 		}

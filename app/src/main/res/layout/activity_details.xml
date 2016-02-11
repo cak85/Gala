@@ -44,12 +44,6 @@
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
-    <WebView
-        android:id="@+id/details_browser"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"/>
-
     <include layout="@layout/content_details"/>
 
     <android.support.design.widget.FloatingActionButton

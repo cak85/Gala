@@ -20,7 +20,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	private static DBHelper mInstance = null;
 
 	// If you change the database schema, you must increment the database version.
-	public static final int DATABASE_VERSION = 1;
+	public static final int DATABASE_VERSION = 3;
 	public static final String DATABASE_NAME = "Categories.db";
 
 	public DBHelper(Context context) {
@@ -44,13 +44,11 @@ public class DBHelper extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		db.execSQL(CategoryContract.CategoryEntry.SQL_CREATE_ENTRIES);
-		db.execSQL(CategoryContract.DescriptionEntry.SQL_CREATE_ENTRIES);
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		db.execSQL(CategoryContract.CategoryEntry.SQL_DELETE_ENTRIES);
-		db.execSQL(CategoryContract.DescriptionEntry.SQL_DELETE_ENTRIES);
 		onCreate(db);
 	}
 
@@ -85,33 +83,36 @@ public class DBHelper extends SQLiteOpenHelper {
 		getWritableDatabase().insert(CategoryContract.CategoryEntry.TABLE_NAME, NULL, values);
 	}
 
-	public String getDescription(String packageName) {
-		SQLiteDatabase database = getReadableDatabase();
-		Cursor cursor = database.query(
-				CategoryContract.DescriptionEntry.TABLE_NAME,
-				new String[]{CategoryContract.DescriptionEntry.COLUMN_DESCRIPTION},
-				CategoryContract.DescriptionEntry.COLUMN_PACKAGE_NAME + " = '" + packageName + "'",
-				null,
-				null,
-				null,
-				null
-		);
-		cursor.moveToFirst();
-		String description = null;
-		try {
-			description = cursor.getString(0);
-		} catch (CursorIndexOutOfBoundsException e) {
-		} finally {
-			cursor.close();
-		}
-		return description;
-	}
+//	public String[] getDescription(String packageName) {
+//		SQLiteDatabase database = getReadableDatabase();
+//		Cursor cursor = database.query(
+//				CategoryContract.DescriptionEntry.TABLE_NAME,
+//				new String[]{CategoryContract.DescriptionEntry.COLUMN_DESCRIPTION},
+//				CategoryContract.DescriptionEntry.COLUMN_PACKAGE_NAME + " = '" + packageName + "'",
+//				null,
+//				null,
+//				null,
+//				null
+//		);
+//		cursor.moveToFirst();
+//		String title = null;
+//		String description = null;
+//		try {
+//			title = cursor.getString(0);
+//			description = cursor.getString(1);
+//		} catch (CursorIndexOutOfBoundsException e) {
+//		} finally {
+//			cursor.close();
+//		}
+//		return new String[]{title, description};
+//	}
 
-	public void saveDescription(String packageName, String description) {
-		ContentValues values = new ContentValues();
-		values.put(CategoryContract.DescriptionEntry.COLUMN_PACKAGE_NAME, packageName);
-		values.put(CategoryContract.DescriptionEntry.COLUMN_DESCRIPTION, description);
-
-		getWritableDatabase().insert(CategoryContract.DescriptionEntry.TABLE_NAME, NULL, values);
-	}
+//	public void saveDescription(String packageName, String title, String description) {
+//		ContentValues values = new ContentValues();
+//		values.put(CategoryContract.DescriptionEntry.COLUMN_PACKAGE_NAME, packageName);
+//		values.put(CategoryContract.DescriptionEntry.COLUMN_TITLE, title);
+//		values.put(CategoryContract.DescriptionEntry.COLUMN_DESCRIPTION, description);
+//
+//		getWritableDatabase().insert(CategoryContract.DescriptionEntry.TABLE_NAME, NULL, values);
+//	}
 }

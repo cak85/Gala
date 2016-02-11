@@ -27,18 +27,4 @@ public class CategoryContract {
 		public static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS " + TABLE_NAME;
 	}
 
-	public static abstract class DescriptionEntry implements BaseColumns {
-		public static final String TABLE_NAME = "descriptions";
-		public static final String COLUMN_PACKAGE_NAME = "package_name";
-		public static final String COLUMN_DESCRIPTION = "description";
-
-		public static final String SQL_CREATE_ENTRIES =
-				"CREATE TABLE " + TABLE_NAME + " (" + COLUMN_PACKAGE_NAME + TEXT_TYPE
-						+ " PRIMARY KEY" + COMMA_SEP
-						+ COLUMN_DESCRIPTION + TEXT_TYPE +
-						" )";
-
-		public static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS " + TABLE_NAME;
-	}
-
 }
