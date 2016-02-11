@@ -40,7 +40,6 @@ import de.cak85.gala.applications.ApplicationItem;
 import de.cak85.gala.applications.ApplicationManager;
 import de.cak85.gala.applications.AsyncTaskListener;
 import de.cak85.gala.preferences.PreferencesActivity;
-import jp.wasabeef.recyclerview.animators.ScaleInTopAnimator;
 
 public class GameListActivity extends AppCompatActivity {
 
@@ -110,11 +109,6 @@ public class GameListActivity extends AppCompatActivity {
 		handleFirstRun();
 		mAdapter = new SimpleItemRecyclerViewAdapter(ApplicationManager.getInstance().getGames());
         recyclerView.setAdapter(mAdapter);
-        recyclerView.setItemAnimator(new ScaleInTopAnimator(new OvershootInterpolator(1f)));
-        recyclerView.getItemAnimator().setAddDuration(500);
-        recyclerView.getItemAnimator().setRemoveDuration(500);
-        recyclerView.getItemAnimator().setMoveDuration(500);
-        recyclerView.getItemAnimator().setChangeDuration(500);
     }
 
 	private void handleFirstRun() {
