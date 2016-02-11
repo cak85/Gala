@@ -25,7 +25,8 @@
             android:layout_alignParentTop="true"
             android:clickable="false"
             android:scaleType="centerCrop"
-            tools:ignore="ContentDescription"/>
+            tools:ignore="ContentDescription"
+            android:transitionName="details"/>
 
         <TextView
             android:id="@+id/title"
@@ -36,8 +37,7 @@
             android:ellipsize="end"
             android:padding="8dp"
             android:singleLine="true"
-            android:textSize="16sp"
-            android:transitionName="details"/>
+            android:textSize="16sp"/>
 
     </RelativeLayout>
 </FrameLayout>
