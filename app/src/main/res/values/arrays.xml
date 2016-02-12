@@ -24,9 +24,22 @@
         <item>20dp</item>
         <item>32dp</item>
     </string-array>
+    <string-array name="pref_user_interface_height_entries">
+        <item>@string/height_small</item>
+        <item>@string/height_middle</item>
+        <item>@string/height_big</item>
+    </string-array>
+    <string-array name="pref_user_interface_height_entry_values">
+        <item>64dp</item>
+        <item>96dp</item>
+        <item>128dp</item>
+    </string-array>
     <string name="spacing_no">no spacing</string>
     <string name="spacing_small">small spacing</string>
     <string name="spacing_middle">middle spacing</string>
     <string name="spacing_big">big spacing</string>
     <string name="spacing_large">large spacing</string>
+    <string name="height_small">small height</string>
+    <string name="height_middle">middle height</string>
+    <string name="height_big">big height</string>
 </resources>

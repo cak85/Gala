@@ -128,6 +128,10 @@ public class PreferencesFragment extends PreferenceFragment
 				c.setSummary(getActivity().getString(
 						R.string.pref_user_interface_shadow_sum_false));
 			}
+		} else if (key.equals(getActivity().getString(R.string.pref_key_user_interface_height))) {
+			ListPreference l = (ListPreference) findPreference(key);
+			l.setSummary(getActivity().getString(
+					R.string.pref_user_interface_height_sum, l.getEntry()));
 		}
 	}
 

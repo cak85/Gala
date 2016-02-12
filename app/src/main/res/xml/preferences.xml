@@ -9,6 +9,13 @@
             android:entryValues="@array/pref_user_interface_num_columns_entry_values"
             android:defaultValue="@integer/num_grids"/>
         <ListPreference
+            android:key="@string/pref_key_user_interface_height"
+            android:summary="@string/pref_user_interface_height_sum"
+            android:title="@string/pref_user_interface_height_title"
+            android:entries="@array/pref_user_interface_height_entries"
+            android:entryValues="@array/pref_user_interface_height_entry_values"
+            android:defaultValue="64dp"/>
+        <ListPreference
             android:key="@string/pref_key_user_interface_spacing"
             android:summary="@string/pref_user_interface_spacing_sum"
             android:title="@string/pref_user_interface_spacing_title"

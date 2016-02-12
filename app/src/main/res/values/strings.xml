@@ -36,4 +36,7 @@
     <string name="pref_user_interface_shadow_sum_false">Game items have no shadow.</string>
     <string name="pref_user_interface_shadow_sum_true">Game items have a shadow.</string>
     <string name="pref_user_interface_shadow_title">Show shadow</string>
+    <string name="pref_key_user_interface_height">pref_key_user_interface_height</string>
+    <string name="pref_user_interface_height_sum">For the game items a %1$s is used.</string>
+    <string name="pref_user_interface_height_title">Height of game items</string>
 </resources>

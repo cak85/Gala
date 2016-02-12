@@ -30,4 +30,6 @@
     <string name="pref_user_interface_shadow_sum_false">Spiel-Icons werfen keinen Schatten.</string>
     <string name="pref_user_interface_shadow_sum_true">Spiel-Icons werfen einen Schatten.</string>
     <string name="pref_user_interface_shadow_title">Zeige Schatten</string>
+    <string name="pref_user_interface_height_sum">Für die Spiele-Icons wird eine %1$s verwendet.</string>
+    <string name="pref_user_interface_height_title">Höhe der Spiele-Icons</string>
 </resources>

@@ -27,6 +27,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -40,10 +41,12 @@ import de.cak85.gala.preferences.PreferencesActivity;
 public class GameListActivity extends AppCompatActivity {
 
 	private static final int EDIT_GAMES_REQUEST = 1;
-	public static final String DEFAULT_SPACING = "4";
+	public static final String DEFAULT_SPACING = "4dp";
 	private static final int SHOW_PREFERENCES_REQUEST = 2;
+	private static final String DEFAULT_HEIGHT = "64dp";
 	private SimpleItemRecyclerViewAdapter mAdapter;
 	private int spacing;
+	private int height;
 	private boolean showShadow;
 
 	@Override
@@ -51,10 +54,7 @@ public class GameListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_list);
 
-		final SharedPreferences sharedPreferences =
-				PreferenceManager.getDefaultSharedPreferences(this);
-		setSpacing(sharedPreferences);
-		setShadow(sharedPreferences);
+		reloadPreferences();
 
 	    View recyclerView = findViewById(R.id.item_list);
         assert recyclerView != null;
@@ -65,15 +65,17 @@ public class GameListActivity extends AppCompatActivity {
         mActionBarToolbar.setTitle(getResources().getString(R.string.app_name));
     }
 
-	private void setShadow(SharedPreferences sharedPreferences) {
+	private void reloadPreferences() {
+		final SharedPreferences sharedPreferences =
+				PreferenceManager.getDefaultSharedPreferences(this);
 		showShadow = sharedPreferences.getBoolean(
 				getString(R.string.pref_key_user_interface_shadow), false);
-	}
-
-	private void setSpacing(SharedPreferences sharedPreferences) {
 		spacing = Integer.valueOf(sharedPreferences.getString(
 				getString(R.string.pref_key_user_interface_spacing),
 				DEFAULT_SPACING).replaceAll("[\\D]", ""));
+		height = Integer.valueOf(sharedPreferences.getString(
+				getString(R.string.pref_key_user_interface_height),
+				DEFAULT_HEIGHT).replaceAll("[\\D]", ""));
 	}
 
 	private int getColumns(SharedPreferences sharedPreferences) {
@@ -104,8 +106,7 @@ public class GameListActivity extends AppCompatActivity {
         } else if (requestCode == SHOW_PREFERENCES_REQUEST) {
 	        SharedPreferences sharedPreferences =
 			        PreferenceManager.getDefaultSharedPreferences(this);
-	        setSpacing(sharedPreferences);
-	        setShadow(sharedPreferences);
+	        reloadPreferences();
 	        View recyclerView = findViewById(R.id.item_list);
 	        assert recyclerView != null;
 	        ((GridLayoutManager) ((RecyclerView) recyclerView)
@@ -264,6 +265,11 @@ public class GameListActivity extends AppCompatActivity {
 			        holder.mView.setElevation(0f);
 		        }
 	        }
+
+	        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)
+			        holder.mImageView.getLayoutParams();
+	        params.height = (int) (height * density);
+	        holder.mImageView.setLayoutParams(params);
 
             Palette palette = Palette.from(((BitmapDrawable)mValues.get(
 		            position).getIcon()).getBitmap()).generate();
