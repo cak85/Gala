@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="spacing_no">kein Abstand</string>
+    <string name="spacing_small">kleiner Abstand</string>
+    <string name="spacing_middle">mittlerer Abstand</string>
+    <string name="spacing_big">großer Abstand</string>
+    <string name="spacing_large">sehr großer Abstand</string>
+</resources>

@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
+import android.preference.ListPreference;
 import android.preference.MultiSelectListPreference;
 import android.preference.PreferenceFragment;
 import android.support.v7.app.AlertDialog;
@@ -41,17 +42,17 @@ public class PreferencesFragment extends PreferenceFragment
 			}
 			multiSelectListPreference.setOnClickListner(
 					new GalaMultiSelectListPreference.OnClickListener() {
-				@Override
-				public boolean onClick() {
-					populateBluetoothDevicesList();
-					try {
-						Thread.sleep(100);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-					return multiSelectListPreference.getEntries().length <= 0;
-				}
-			});
+						@Override
+						public boolean onClick() {
+							populateBluetoothDevicesList();
+							try {
+								Thread.sleep(100);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+							return multiSelectListPreference.getEntries().length <= 0;
+						}
+					});
 		}
 	}
 
@@ -105,13 +106,27 @@ public class PreferencesFragment extends PreferenceFragment
 		} else if (key.equals(getActivity().getString(R.string.pref_key_selected_bluetooth_devices))) {
 			GalaMultiSelectListPreference p = (GalaMultiSelectListPreference) findPreference(key);
 			if (!p.getValues().isEmpty()) {
-				//serviceIntent.putStringArrayListExtra("devicesFilter",
-				//		new ArrayList<String>(p.getValues()));
-				//getActivity().startService(serviceIntent);
 				getDetailedSummary(p);
 			} else {
 				p.setSummary(getActivity().getString(
 						R.string.pref_selected_bluetooth_devices_summ));
+			}
+		} else if (key.equals(getActivity().getString(R.string.pref_key_user_interface_num_columns))) {
+			ListPreference l = (ListPreference) findPreference(key);
+			l.setSummary(getActivity().getString(
+					R.string.pref_user_interface_num_columns_sum, l.getEntry()));
+		} else if (key.equals(getActivity().getString(R.string.pref_key_user_interface_spacing))) {
+			ListPreference l = (ListPreference) findPreference(key);
+			l.setSummary(getActivity().getString(
+					R.string.pref_user_interface_spacing_sum, l.getEntry()));
+		} else if (key.equals(getActivity().getString(R.string.pref_key_user_interface_shadow))) {
+			CheckBoxPreference c = (CheckBoxPreference) findPreference(key);
+			if (c.isChecked()) {
+				c.setSummary(getActivity().getString(
+						R.string.pref_user_interface_shadow_sum_true));
+			} else {
+				c.setSummary(getActivity().getString(
+						R.string.pref_user_interface_shadow_sum_false));
 			}
 		}
 	}

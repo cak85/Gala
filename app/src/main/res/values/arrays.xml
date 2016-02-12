@@ -1,4 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="empty_array" />
+    <string-array name="pref_user_interface_num_columns_entry_values">
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+    </string-array>
+    <string-array name="pref_user_interface_spacing_entries">
+        <item>@string/spacing_no</item>
+        <item>@string/spacing_small</item>
+        <item>@string/spacing_middle</item>
+        <item>@string/spacing_big</item>
+        <item>@string/spacing_large</item>
+    </string-array>
+    <string-array name="pref_user_interface_spacing_entry_values">
+        <item>0dp</item>
+        <item>4dp</item>
+        <item>12dp</item>
+        <item>20dp</item>
+        <item>32dp</item>
+    </string-array>
+    <string name="spacing_no">no spacing</string>
+    <string name="spacing_small">small spacing</string>
+    <string name="spacing_middle">middle spacing</string>
+    <string name="spacing_big">big spacing</string>
+    <string name="spacing_large">large spacing</string>
 </resources>

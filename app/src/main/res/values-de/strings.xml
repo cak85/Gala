@@ -22,4 +22,12 @@
     <string name="first_run_question">Möchten Sie, dass Gala nach allen auf dem Gerät installierten Spielen sucht?\nSie können auch später Spiele hinzufügen.</string>
     <string name="menu_auto_discover_games">Spiele suchen</string>
     <string name="discover_games_question">Möchten Sie, dass Gala nach allen auf dem Gerät installierten Spielen und bei Erfolg zu Ihrer Spieleliste hinzufügt?</string>
+    <string name="user_interface_settings_category">Benutzeroberfläche</string>
+    <string name="pref_user_interface_num_columns_sum">Die Spiele werden in %1$s Spalten dargestellt.</string>
+    <string name="pref_user_interface_num_columns_title">Anzahl Spalten</string>
+    <string name="pref_user_interface_spacing_sum">Der Abstand zwischen den Spielen ist angegeben mit %1$s.</string>
+    <string name="pref_user_interface_spacing_title">Abstand zwischen Spielen</string>
+    <string name="pref_user_interface_shadow_sum_false">Spiel-Icons werfen keinen Schatten.</string>
+    <string name="pref_user_interface_shadow_sum_true">Spiel-Icons werfen einen Schatten.</string>
+    <string name="pref_user_interface_shadow_title">Zeige Schatten</string>
 </resources>

@@ -29,7 +29,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import de.cak85.gala.R;
@@ -40,15 +39,24 @@ import de.cak85.gala.preferences.PreferencesActivity;
 
 public class GameListActivity extends AppCompatActivity {
 
-    private static final int EDIT_GAMES_REQUEST = 1;
-    private SimpleItemRecyclerViewAdapter mAdapter;
+	private static final int EDIT_GAMES_REQUEST = 1;
+	public static final String DEFAULT_SPACING = "4";
+	private static final int SHOW_PREFERENCES_REQUEST = 2;
+	private SimpleItemRecyclerViewAdapter mAdapter;
+	private int spacing;
+	private boolean showShadow;
 
-    @Override
+	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_list);
 
-        View recyclerView = findViewById(R.id.item_list);
+		final SharedPreferences sharedPreferences =
+				PreferenceManager.getDefaultSharedPreferences(this);
+		setSpacing(sharedPreferences);
+		setShadow(sharedPreferences);
+
+	    View recyclerView = findViewById(R.id.item_list);
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
 
@@ -56,6 +64,23 @@ public class GameListActivity extends AppCompatActivity {
         setSupportActionBar(mActionBarToolbar);
         mActionBarToolbar.setTitle(getResources().getString(R.string.app_name));
     }
+
+	private void setShadow(SharedPreferences sharedPreferences) {
+		showShadow = sharedPreferences.getBoolean(
+				getString(R.string.pref_key_user_interface_shadow), false);
+	}
+
+	private void setSpacing(SharedPreferences sharedPreferences) {
+		spacing = Integer.valueOf(sharedPreferences.getString(
+				getString(R.string.pref_key_user_interface_spacing),
+				DEFAULT_SPACING).replaceAll("[\\D]", ""));
+	}
+
+	private int getColumns(SharedPreferences sharedPreferences) {
+		return  Integer.valueOf(sharedPreferences.getString(
+				getString(R.string.pref_key_user_interface_num_columns),
+				String.valueOf(getResources().getInteger(R.integer.num_grids))));
+	}
 
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -66,17 +91,26 @@ public class GameListActivity extends AppCompatActivity {
 
     public void editGames(MenuItem item){
         Intent myIntent = new Intent(GameListActivity.this, EditGamesActivity.class);
-        GameListActivity.this.startActivityForResult(myIntent, EDIT_GAMES_REQUEST);
+        startActivityForResult(myIntent, EDIT_GAMES_REQUEST);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == EDIT_GAMES_REQUEST) {
-            List<String> chosenGamePackageNames = new ArrayList<>();
             if (resultCode == RESULT_OK) {
                 mAdapter.notifyDataSetChanged();
 	            ApplicationManager.getInstance().save(this);
             }
+        } else if (requestCode == SHOW_PREFERENCES_REQUEST) {
+	        SharedPreferences sharedPreferences =
+			        PreferenceManager.getDefaultSharedPreferences(this);
+	        setSpacing(sharedPreferences);
+	        setShadow(sharedPreferences);
+	        View recyclerView = findViewById(R.id.item_list);
+	        assert recyclerView != null;
+	        ((GridLayoutManager) ((RecyclerView) recyclerView)
+			        .getLayoutManager()).setSpanCount(getColumns(sharedPreferences));
+	        mAdapter.notifyDataSetChanged();
         }
     }
 
@@ -102,7 +136,7 @@ public class GameListActivity extends AppCompatActivity {
 
 	private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
         recyclerView.setLayoutManager(new GridLayoutManager(this,
-		        getResources().getInteger(R.integer.num_grids)));
+		        getColumns(PreferenceManager.getDefaultSharedPreferences(this))));
 		handleFirstRun();
 		mAdapter = new SimpleItemRecyclerViewAdapter(ApplicationManager.getInstance().getGames());
         recyclerView.setAdapter(mAdapter);
@@ -157,7 +191,7 @@ public class GameListActivity extends AppCompatActivity {
 
 	public void showPreferences(MenuItem item) {
         Intent i = new Intent(this, PreferencesActivity.class);
-        startActivity(i);
+        startActivityForResult(i, SHOW_PREFERENCES_REQUEST);
     }
 
 	// used to prevent the dialog for discovering games can accidentally be shown twice.
@@ -213,7 +247,23 @@ public class GameListActivity extends AppCompatActivity {
             holder.mItem = mValues.get(position);
             holder.mImageView.setImageDrawable(mValues.get(position).getIcon());
             holder.mIdView.setText(mValues.get(position).getName());
-//            holder.mContentView.setText(mValues.get(position).content);
+
+	        GridLayoutManager.LayoutParams lp =
+			        new GridLayoutManager.LayoutParams(
+					        GridLayoutManager.LayoutParams.MATCH_PARENT,
+					        GridLayoutManager.LayoutParams.WRAP_CONTENT);
+	        final float density = context.getResources().getDisplayMetrics().density;
+	        int margin = (int) (density * spacing);
+	        lp.setMargins(margin, margin, margin, margin);
+	        holder.mView.setLayoutParams(lp);
+
+	        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+		        if (showShadow) {
+			        holder.mView.setElevation(2f * density);
+		        } else {
+			        holder.mView.setElevation(0f);
+		        }
+	        }
 
             Palette palette = Palette.from(((BitmapDrawable)mValues.get(
 		            position).getIcon()).getBitmap()).generate();

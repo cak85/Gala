@@ -20,6 +20,6 @@ public class PreferencesActivity extends AppCompatActivity {
         assert getSupportActionBar() != null;
         getSupportActionBar().setTitle(getString(R.string.settings));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setElevation(8);
+        getSupportActionBar().setElevation(4f * getResources().getDisplayMetrics().density);
     }
 }
