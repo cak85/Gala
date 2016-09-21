@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -33,10 +34,9 @@ import de.cak85.gala.applications.ApplicationManager;
 
 public class DetailsActivity extends AppCompatActivity {
 
-	public static final int TRANSITION_MILLIS = 600;
+	public static final int TRANSITION_MILLIS = 800;
 	public static final int TRANSITION_REVERSE_MILLIS = 250;
 	private ApplicationItem app;
-	private BitmapDrawable image;
 	private TransitionDrawable transitionDrawable;
 
 	@Override
@@ -55,22 +55,33 @@ public class DetailsActivity extends AppCompatActivity {
 
 		setTitle(app.getName());
 		final ImageView imageView = (ImageView) findViewById(R.id.details_image);
-		image = new BitmapDrawable(getResources(),
-				ApplicationManager.getInstance().getImage(this, app));
-		if (image != null) {
+		BitmapDrawable image = new BitmapDrawable(getResources(),
+				 ApplicationManager.getInstance().getImage(this, app));
+		if (image.getBitmap() != null) {
 			Drawable[] layers = new Drawable[2];
 			layers[0] = getDrawable(app.getIcon(), iconBackgroundColor, image, this);
-			layers[1] = getTintedDrawable(image, getResources().getColor(R.color.colorPrimary));
+			layers[1] = getTintedDrawable(image,
+					ContextCompat.getColor(DetailsActivity.this, R.color.colorPrimary), this);
 			transitionDrawable = new TransitionDrawable(layers);
-			imageView.setImageDrawable(transitionDrawable);
-			imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-			transitionDrawable.startTransition(TRANSITION_MILLIS);
+		} else {
+			Drawable[] layers = new Drawable[2];
+			layers[0] = getDrawable(app.getIcon(), iconBackgroundColor, null, this);
+			layers[1] = getTintedDrawable(app.getIcon(),
+					ContextCompat.getColor(DetailsActivity.this, R.color.colorPrimary), this);
+			transitionDrawable = new TransitionDrawable(layers);
 		}
+		imageView.setImageDrawable(transitionDrawable);
+		imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+		transitionDrawable.startTransition(TRANSITION_MILLIS);
 
 		TextView titleView = (TextView) findViewById(R.id.details_content_title);
 		titleView.setText(app.getTitle());
 		TextView textView = (TextView) findViewById(R.id.details_content_text);
-		textView.setText(Html.fromHtml(app.getDescription()));
+		if (Build.VERSION.SDK_INT >= 24) {
+			textView.setText(Html.fromHtml(app.getDescription(), Html.FROM_HTML_MODE_LEGACY));
+		} else {
+			textView.setText(Html.fromHtml(app.getDescription()));
+		}
 		View progressbar = findViewById(R.id.details_content_progressbar);
 		progressbar.setVisibility(View.GONE);
 		textView.setVisibility(View.VISIBLE);
@@ -87,8 +98,9 @@ public class DetailsActivity extends AppCompatActivity {
 				FragmentTransaction ft = fm.beginTransaction();
 				StartScreenFragment f = new StartScreenFragment();
 
-				f.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-				f.setTextColor(getResources().getColor(android.R.color.white));
+				f.setBackgroundColor(ContextCompat.getColor(DetailsActivity.this,
+						R.color.colorPrimary));
+				f.setTextColor(ContextCompat.getColor(DetailsActivity.this, android.R.color.white));
 				f.setGameItem(app);
 				f.setCoordinates((int) fab.getX() + fab.getWidth() / 2,
 						(int) fab.getY() + fab.getHeight() / 2);
@@ -114,9 +126,7 @@ public class DetailsActivity extends AppCompatActivity {
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();
-		if (image != null) {
-			transitionDrawable.reverseTransition(TRANSITION_REVERSE_MILLIS);
-		}
+		transitionDrawable.reverseTransition(TRANSITION_REVERSE_MILLIS);
 	}
 
 	/*@SuppressLint("SetJavaScriptEnabled")
@@ -170,29 +180,38 @@ public class DetailsActivity extends AppCompatActivity {
 	}*/
 
 	public static Drawable getTintedDrawable(@NonNull Drawable inputDrawable,
-	                                         @ColorInt int color) {
-		Drawable wrapDrawable = DrawableCompat.wrap(inputDrawable);
-		DrawableCompat.setTint(wrapDrawable, color);
-		DrawableCompat.setTintMode(wrapDrawable, PorterDuff.Mode.MULTIPLY);
-		return wrapDrawable;
-	}
-
-	private Drawable getDrawable(@NonNull Drawable icon,
-	                             int iconBackgroundColor,
-	                             @NonNull BitmapDrawable image,
-	                             @NonNull Context context) {
-		Drawable d = new ColorDrawable(iconBackgroundColor);
-		d.setBounds(new Rect(0, 0, image.getMinimumWidth(), image.getMinimumHeight()));
-		final Bitmap bitmap = Bitmap.createBitmap(image.getMinimumWidth(), image.getMinimumHeight(),
-				Bitmap.Config.ARGB_8888);
+	                                         @ColorInt int color, @NonNull Context context) {
+		int width = inputDrawable.getMinimumWidth();
+		int height = inputDrawable.getMinimumHeight();
+		Drawable d = new ColorDrawable(color);
+		final Rect bounds = new Rect(0, 0, width, height);
+		d.setBounds(bounds);
+		final Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
 		Canvas c = new Canvas(bitmap);
 		d.draw(c);
-		float iconScaleFactor =
-				((float) image.getMinimumWidth()) / ((float) icon.getMinimumWidth());
+		c.drawBitmap(((BitmapDrawable) inputDrawable).getBitmap(), bounds, bounds, null);
+		final BitmapDrawable bitmapDrawable = new BitmapDrawable(context.getResources(), bitmap);
+		DrawableCompat.setTintMode(bitmapDrawable, PorterDuff.Mode.MULTIPLY);
+		DrawableCompat.setTint(bitmapDrawable, color);
+		return bitmapDrawable;
+	}
+
+	private static Drawable getDrawable(@NonNull Drawable icon,
+	                             @ColorInt int iconBackgroundColor,
+	                             BitmapDrawable image,
+	                             @NonNull Context context) {
+		int width = image != null ? image.getMinimumWidth() : icon.getMinimumWidth();
+		int height = image != null ? image.getMinimumHeight() : icon.getMinimumHeight();
+		Drawable d = new ColorDrawable(iconBackgroundColor);
+		d.setBounds(new Rect(0, 0, width, height));
+		final Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+		Canvas c = new Canvas(bitmap);
+		d.draw(c);
+		float iconScaleFactor = ((float) width) / ((float) icon.getMinimumWidth());
 		int scaledIconHeight = (int) (icon.getMinimumHeight() * iconScaleFactor);
-		int diff = (image.getMinimumHeight() - scaledIconHeight) / 2;
+		int diff = (height - scaledIconHeight) / 2;
 		c.drawBitmap(((BitmapDrawable) icon).getBitmap(), icon.getBounds(),
-				new Rect(0, diff, image.getMinimumWidth(), diff + scaledIconHeight), null);
+				new Rect(0, diff, width, diff + scaledIconHeight), null);
 		return new BitmapDrawable(context.getResources(), bitmap);
 	}
 }
