@@ -27,9 +27,6 @@ public class BluetoothDetectionReceiver extends BroadcastReceiver {
 			if (action.equals(BluetoothDevice.ACTION_ACL_CONNECTED)) {
 				final BluetoothDevice bluetoothDevice =
 						intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-				Toast.makeText(context,
-						"Receiver: Device " + bluetoothDevice.toString() + " connected.",
-						Toast.LENGTH_SHORT).show();
 				Set<String> devicesFilter = PreferenceManager.getDefaultSharedPreferences(context)
 						.getStringSet(
 								context.getString(
