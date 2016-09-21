@@ -10,7 +10,7 @@
     <string name="pref_bluetooth_detection_summ">Startet Gala, wenn ein ausgewähltes Bluetooth-Gerät sich verbindet.</string>
     <string name="pref_bluetooth_detection_title">Bluetooth-Geräte-Erkennung</string>
     <string name="error">Fehler</string>
-    <string name="bluetooth_not_supported">\"Bluetooth wird NICHT unterstützt!\"</string>
+    <string name="bluetooth_not_supported">Bluetooth wird NICHT unterstützt!</string>
     <string name="bluetooth_enable_error">Bluetooth konnte NICHT aktiviert werden!</string>
     <string name="bluetooth_settings">Bluetooth-Einstellungen</string>
     <string name="toolbar_title_manage_apps">Anwendungsverwaltung</string>

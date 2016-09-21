@@ -12,7 +12,7 @@
     <string name="pref_key_bluetooth_detection_service" translatable="false">pref_key_bluetooth_detection_service</string>
     <string name="pref_key_selected_bluetooth_devices" translatable="false">pref_key_selected_bluetooth_devices</string>
     <string name="error">Error</string>
-    <string name="bluetooth_not_supported">\"Bluetooth NOT support!\"</string>
+    <string name="bluetooth_not_supported">Bluetooth NOT support!</string>
     <string name="bluetooth_enable_error">Bluetooth could NOT be enabled!</string>
     <string name="bluetooth_settings">Bluetooth settings</string>
     <string name="toolbar_title_manage_apps">Manage apps</string>
