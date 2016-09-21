@@ -4,7 +4,6 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -16,10 +15,8 @@ import android.graphics.drawable.TransitionDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
-import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -51,7 +48,9 @@ public class DetailsActivity extends AppCompatActivity {
 		assert getSupportActionBar() != null;
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-		final String packageName = getIntent().getStringExtra("packageName");
+		final String packageName = getIntent().getStringExtra(GameListActivity.INTENT_PACKAGE_NAME);
+		final int iconBackgroundColor = getIntent().getIntExtra(
+				GameListActivity.INTENT_ICON_BACKGROUND_COLOR, Color.LTGRAY);
 		app = ApplicationManager.getInstance().getGame(packageName);
 
 		setTitle(app.getName());
@@ -60,7 +59,7 @@ public class DetailsActivity extends AppCompatActivity {
 				ApplicationManager.getInstance().getImage(this, app));
 		if (image != null) {
 			Drawable[] layers = new Drawable[2];
-			layers[0] = getDrawable(app.getIcon(), image, this);
+			layers[0] = getDrawable(app.getIcon(), iconBackgroundColor, image, this);
 			layers[1] = getTintedDrawable(image, getResources().getColor(R.color.colorPrimary));
 			transitionDrawable = new TransitionDrawable(layers);
 			imageView.setImageDrawable(transitionDrawable);
@@ -178,8 +177,11 @@ public class DetailsActivity extends AppCompatActivity {
 		return wrapDrawable;
 	}
 
-	private Drawable getDrawable(Drawable icon, BitmapDrawable image, @NonNull Context context) {
-		Drawable d = new ColorDrawable(Color.TRANSPARENT);
+	private Drawable getDrawable(@NonNull Drawable icon,
+	                             int iconBackgroundColor,
+	                             @NonNull BitmapDrawable image,
+	                             @NonNull Context context) {
+		Drawable d = new ColorDrawable(iconBackgroundColor);
 		d.setBounds(new Rect(0, 0, image.getMinimumWidth(), image.getMinimumHeight()));
 		final Bitmap bitmap = Bitmap.createBitmap(image.getMinimumWidth(), image.getMinimumHeight(),
 				Bitmap.Config.ARGB_8888);

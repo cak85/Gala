@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
@@ -44,6 +45,17 @@ public class GameListActivity extends AppCompatActivity {
 	public static final String DEFAULT_SPACING = "4dp";
 	private static final int SHOW_PREFERENCES_REQUEST = 2;
 	private static final String DEFAULT_HEIGHT = "64dp";
+
+	/**
+	 * Icon background color is given to DetailsActivity using this constant.
+	 */
+	public static final String INTENT_ICON_BACKGROUND_COLOR = "iconBackgroundColor";
+
+	/**
+	 * selected package name is given to DetailsActivity using this constant.
+	 */
+	public static final String INTENT_PACKAGE_NAME = "packageName";
+
 	private SimpleItemRecyclerViewAdapter mAdapter;
 	private int spacing;
 	private int height;
@@ -231,7 +243,7 @@ public class GameListActivity extends AppCompatActivity {
         private final List<ApplicationItem> mValues;
 	    private Context context;
 
-	    public SimpleItemRecyclerViewAdapter(List<ApplicationItem> items) {
+	    private SimpleItemRecyclerViewAdapter(List<ApplicationItem> items) {
             mValues = items;
         }
 
@@ -279,23 +291,26 @@ public class GameListActivity extends AppCompatActivity {
                 holder.mIdView.setTextColor(vibrantSwatch.getBodyTextColor());
             } else {
 	            holder.mIdView.setBackgroundColor(palette.getMutedColor(
-		                getResources().getColor(R.color.colorPrimary)));
+			            ContextCompat.getColor(GameListActivity.this, R.color.colorPrimary)));
                 holder.mIdView.setTextColor(palette.getDarkMutedColor(Color.WHITE));
             }
             final Palette.Swatch lightMutedSwatch = palette.getLightMutedSwatch();
+	        final int iconBackgroundColor;
             if (lightMutedSwatch != null) {
-                holder.mImageView.setBackgroundColor(lightMutedSwatch.getRgb());
+                iconBackgroundColor = lightMutedSwatch.getRgb();
             } else {
-                holder.mImageView.setBackgroundColor(Color.LTGRAY);
+                iconBackgroundColor = Color.LTGRAY;
             }
+	        holder.mImageView.setBackgroundColor(iconBackgroundColor);
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 	                Intent myIntent = new Intent(GameListActivity.this, DetailsActivity.class);
-	                myIntent.putExtra("packageName", holder.mItem.getPackageName());
+	                myIntent.putExtra(INTENT_PACKAGE_NAME, holder.mItem.getPackageName());
+	                myIntent.putExtra(INTENT_ICON_BACKGROUND_COLOR, iconBackgroundColor);
 	                ActivityOptionsCompat options = ActivityOptionsCompat.
 			                makeSceneTransitionAnimation(
-					                GameListActivity.this, (View) holder.mImageView,
+					                GameListActivity.this, holder.mImageView,
 					                "details");
 	                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
 		                GameListActivity.this.startActivity(myIntent, options.toBundle());
@@ -311,13 +326,13 @@ public class GameListActivity extends AppCompatActivity {
             return mValues.size();
         }
 
-        public class ViewHolder extends RecyclerView.ViewHolder {
-            public final View mView;
-            public final ImageView mImageView;
-            public final TextView mIdView;
-            public ApplicationItem mItem;
+        class ViewHolder extends RecyclerView.ViewHolder {
+            private final View mView;
+            private final ImageView mImageView;
+            private final TextView mIdView;
+            private ApplicationItem mItem;
 
-            public ViewHolder(View view) {
+            private ViewHolder(View view) {
                 super(view);
                 mView = view;
                 mImageView = (ImageView) view.findViewById(R.id.image);
