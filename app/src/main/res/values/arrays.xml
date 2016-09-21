@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="empty_array" />
-    <string-array name="pref_user_interface_num_columns_entry_values">
+    <string-array name="pref_user_interface_num_columns_entry_values" translatable="false">
         <item>2</item>
         <item>3</item>
         <item>4</item>
@@ -17,7 +17,7 @@
         <item>@string/spacing_big</item>
         <item>@string/spacing_large</item>
     </string-array>
-    <string-array name="pref_user_interface_spacing_entry_values">
+    <string-array name="pref_user_interface_spacing_entry_values" translatable="false">
         <item>0dp</item>
         <item>4dp</item>
         <item>12dp</item>
@@ -29,7 +29,7 @@
         <item>@string/height_middle</item>
         <item>@string/height_big</item>
     </string-array>
-    <string-array name="pref_user_interface_height_entry_values">
+    <string-array name="pref_user_interface_height_entry_values" translatable="false">
         <item>64dp</item>
         <item>96dp</item>
         <item>128dp</item>
