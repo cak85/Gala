@@ -36,6 +36,8 @@ import de.cak85.gala.applications.ApplicationManager;
 
 public class DetailsActivity extends AppCompatActivity {
 
+	public static final int TRANSITION_MILLIS = 600;
+	public static final int TRANSITION_REVERSE_MILLIS = 250;
 	private ApplicationItem app;
 	private BitmapDrawable image;
 	private TransitionDrawable transitionDrawable;
@@ -63,7 +65,7 @@ public class DetailsActivity extends AppCompatActivity {
 			transitionDrawable = new TransitionDrawable(layers);
 			imageView.setImageDrawable(transitionDrawable);
 			imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-			transitionDrawable.startTransition(1000);
+			transitionDrawable.startTransition(TRANSITION_MILLIS);
 		}
 
 		TextView titleView = (TextView) findViewById(R.id.details_content_title);
@@ -114,7 +116,7 @@ public class DetailsActivity extends AppCompatActivity {
 	public void onBackPressed() {
 		super.onBackPressed();
 		if (image != null) {
-			transitionDrawable.reverseTransition(400);
+			transitionDrawable.reverseTransition(TRANSITION_REVERSE_MILLIS);
 		}
 	}
 
