@@ -3,6 +3,7 @@ package de.cak85.gala.launcher;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -14,6 +15,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -57,16 +59,22 @@ public class DetailsActivity extends AppCompatActivity {
 		final ImageView imageView = (ImageView) findViewById(R.id.details_image);
 		BitmapDrawable image = new BitmapDrawable(getResources(),
 				 ApplicationManager.getInstance().getImage(this, app));
+		final SharedPreferences sharedPreferences =
+				PreferenceManager.getDefaultSharedPreferences(this);
+		boolean showDownloadedImages = sharedPreferences.getBoolean(
+				getString(R.string.pref_key_user_interface_show_downloaded_images), false);
+		final Drawable icon = app.getIcon();
 		if (image.getBitmap() != null) {
 			Drawable[] layers = new Drawable[2];
-			layers[0] = getDrawable(app.getIcon(), iconBackgroundColor, image, this);
+			layers[0] = showDownloadedImages ?
+					image : getDrawable(icon, iconBackgroundColor, image, this);
 			layers[1] = getTintedDrawable(image,
 					ContextCompat.getColor(DetailsActivity.this, R.color.colorPrimary), this);
 			transitionDrawable = new TransitionDrawable(layers);
 		} else {
 			Drawable[] layers = new Drawable[2];
-			layers[0] = getDrawable(app.getIcon(), iconBackgroundColor, null, this);
-			layers[1] = getTintedDrawable(app.getIcon(),
+			layers[0] = getDrawable(icon, iconBackgroundColor, null, this);
+			layers[1] = getTintedDrawable(icon,
 					ContextCompat.getColor(DetailsActivity.this, R.color.colorPrimary), this);
 			transitionDrawable = new TransitionDrawable(layers);
 		}
