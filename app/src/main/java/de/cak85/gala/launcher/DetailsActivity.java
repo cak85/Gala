@@ -191,8 +191,9 @@ public class DetailsActivity extends AppCompatActivity {
 		d.draw(c);
 		c.drawBitmap(((BitmapDrawable) inputDrawable).getBitmap(), bounds, bounds, null);
 		final BitmapDrawable bitmapDrawable = new BitmapDrawable(context.getResources(), bitmap);
-		DrawableCompat.setTintMode(bitmapDrawable, PorterDuff.Mode.MULTIPLY);
-		DrawableCompat.setTint(bitmapDrawable, color);
+		//DrawableCompat.setTintMode(bitmapDrawable, PorterDuff.Mode.MULTIPLY);
+		//DrawableCompat.setTint(bitmapDrawable, color);
+		bitmapDrawable.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
 		return bitmapDrawable;
 	}
 
