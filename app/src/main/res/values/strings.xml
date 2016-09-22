@@ -39,4 +39,9 @@
     <string name="pref_key_user_interface_height" translatable="false">pref_key_user_interface_height</string>
     <string name="pref_user_interface_height_sum">For the game items a %1$s is used.</string>
     <string name="pref_user_interface_height_title">Height of game items</string>
+    <string name="pref_cat_bluetooth" translatable="false">pref_cat_bluetooth</string>
+    <string name="pref_key_user_interface_show_downloaded_images">pref_key_user_interface_show_downloaded_images</string>
+    <string name="pref_user_interface_show_downloaded_images_sum_false">For the game items the app icons are shown.</string>
+    <string name="pref_user_interface_show_downloaded_images_sum_true">For the game items the downloaded images are shown (if available).</string>
+    <string name="pref_user_interface_show_downloaded_images_title">Show downloaded images</string>
 </resources>

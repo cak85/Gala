@@ -23,8 +23,15 @@
             android:entryValues="@array/pref_user_interface_spacing_entry_values"
             android:defaultValue="4dp"/>
         <CheckBoxPreference
+            android:key="@string/pref_key_user_interface_show_downloaded_images"
+            android:summaryOff="@string/pref_user_interface_show_downloaded_images_sum_false"
+            android:summaryOn="@string/pref_user_interface_show_downloaded_images_sum_true"
+            android:title="@string/pref_user_interface_show_downloaded_images_title"
+            android:defaultValue="false"/>
+        <CheckBoxPreference
             android:key="@string/pref_key_user_interface_shadow"
-            android:summary="@string/pref_user_interface_shadow_sum_false"
+            android:summaryOff="@string/pref_user_interface_shadow_sum_false"
+            android:summaryOn="@string/pref_user_interface_shadow_sum_true"
             android:title="@string/pref_user_interface_shadow_title"
             android:defaultValue="false"/>
     </PreferenceCategory>

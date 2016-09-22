@@ -10,8 +10,11 @@ import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.MultiSelectListPreference;
+import android.preference.Preference;
+import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,33 +30,7 @@ public class PreferencesFragment extends PreferenceFragment
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.preferences);
-		final GalaMultiSelectListPreference multiSelectListPreference =
-				(GalaMultiSelectListPreference) findPreference(getActivity().getString(
-						R.string.pref_key_selected_bluetooth_devices));
-		if (((CheckBoxPreference) findPreference(getActivity()
-				.getString(R.string.pref_key_bluetooth_detection_service))).isChecked()) {
-			/*Intent serviceIntent = new Intent(getActivity(), BluetoothDetectionService.class);
-			serviceIntent.putStringArrayListExtra("devicesFilter",
-					new ArrayList<String>(multiSelectListPreference.getValues()));
-			getActivity().startService(serviceIntent);*/
-			multiSelectListPreference.setEnabled(true);
-			if (!multiSelectListPreference.getValues().isEmpty()) {
-				getDetailedSummary(multiSelectListPreference);
-			}
-			multiSelectListPreference.setOnClickListner(
-					new GalaMultiSelectListPreference.OnClickListener() {
-						@Override
-						public boolean onClick() {
-							populateBluetoothDevicesList();
-							try {
-								Thread.sleep(100);
-							} catch (InterruptedException e) {
-								e.printStackTrace();
-							}
-							return multiSelectListPreference.getEntries().length <= 0;
-						}
-					});
-		}
+		initBluetoothSettings();
 	}
 
 	private void getDetailedSummary(GalaMultiSelectListPreference multiSelectListPreference) {
@@ -128,6 +105,16 @@ public class PreferencesFragment extends PreferenceFragment
 				c.setSummary(getActivity().getString(
 						R.string.pref_user_interface_shadow_sum_false));
 			}
+		} else if (key.equals(getActivity().getString(
+				R.string.pref_key_user_interface_show_downloaded_images))) {
+			CheckBoxPreference c = (CheckBoxPreference) findPreference(key);
+			if (c.isChecked()) {
+				c.setSummary(getActivity().getString(
+						R.string.pref_user_interface_show_downloaded_images_sum_true));
+			} else {
+				c.setSummary(getActivity().getString(
+						R.string.pref_user_interface_show_downloaded_images_sum_false));
+			}
 		} else if (key.equals(getActivity().getString(R.string.pref_key_user_interface_height))) {
 			ListPreference l = (ListPreference) findPreference(key);
 			l.setSummary(getActivity().getString(
@@ -143,7 +130,7 @@ public class PreferencesFragment extends PreferenceFragment
 								R.string.pref_key_selected_bluetooth_devices));
 		bluetoothDevicesPref.setEntries(new String[]{});
 		bluetoothDevicesPref.setEntryValues(new String[]{});
-		if (checkBluetoothState(bluetoothAdapter)) {
+		if (bluetoothAdapter.isEnabled()) {
 			List<CharSequence> pairedDevicesNames = new ArrayList<>();
 			List<CharSequence> pairedDevicesAddresses = new ArrayList<>();
 			for (BluetoothDevice bluetoothDevice : bluetoothAdapter.getBondedDevices()) {
@@ -154,25 +141,39 @@ public class PreferencesFragment extends PreferenceFragment
 					new String[pairedDevicesNames.size()]));
 			bluetoothDevicesPref.setEntryValues(pairedDevicesAddresses.toArray(
 					new String[pairedDevicesAddresses.size()]));
+		} else {
+			Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+			startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
 		}
 	}
 
-	private boolean checkBluetoothState(BluetoothAdapter bluetoothAdapter) {
-		if (bluetoothAdapter == null) {
-			showErrorDialog(getActivity().getString(R.string.bluetooth_not_supported));
-			(findPreference(getActivity().getString(R.string.pref_key_bluetooth_detection_service)))
-					.setEnabled(false);
-			findPreference(getActivity().getString(
-					R.string.pref_key_selected_bluetooth_devices)).setEnabled(false);
-		} else {
-			if (!bluetoothAdapter.isEnabled()) {
-				Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-				startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-			} else {
-				return true;
+	private void initBluetoothSettings() {
+		if (BluetoothAdapter.getDefaultAdapter() == null) {
+			Preference bluetoothPreferences = getPreferenceScreen()
+					.findPreference(getActivity().getString(R.string.pref_cat_bluetooth));
+			getPreferenceScreen().removePreference(bluetoothPreferences);
+		} else if (((CheckBoxPreference) findPreference(getActivity()
+					.getString(R.string.pref_key_bluetooth_detection_service))).isChecked()) {
+			final GalaMultiSelectListPreference multiSelectListPreference =
+					(GalaMultiSelectListPreference) findPreference(getActivity().getString(
+							R.string.pref_key_selected_bluetooth_devices));
+			if (!multiSelectListPreference.getValues().isEmpty()) {
+				getDetailedSummary(multiSelectListPreference);
 			}
+			multiSelectListPreference.setOnClickListner(
+					new GalaMultiSelectListPreference.OnClickListener() {
+						@Override
+						public boolean onClick() {
+							populateBluetoothDevicesList();
+							try {
+								Thread.sleep(100);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+							return multiSelectListPreference.getEntries().length <= 0;
+						}
+					});
 		}
-		return false;
 	}
 
 	@Override

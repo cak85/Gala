@@ -27,9 +27,12 @@
     <string name="pref_user_interface_num_columns_title">Anzahl Spalten</string>
     <string name="pref_user_interface_spacing_sum">Der Abstand zwischen den Spielen ist angegeben mit %1$s.</string>
     <string name="pref_user_interface_spacing_title">Abstand zwischen Spielen</string>
-    <string name="pref_user_interface_shadow_sum_false">Spiel-Icons werfen keinen Schatten.</string>
-    <string name="pref_user_interface_shadow_sum_true">Spiel-Icons werfen einen Schatten.</string>
+    <string name="pref_user_interface_shadow_sum_false">Spielelemente werfen keinen Schatten.</string>
+    <string name="pref_user_interface_shadow_sum_true">Spielelemente werfen einen Schatten.</string>
     <string name="pref_user_interface_shadow_title">Zeige Schatten</string>
-    <string name="pref_user_interface_height_sum">Für die Spiele-Icons wird eine %1$s verwendet.</string>
-    <string name="pref_user_interface_height_title">Höhe der Spiele-Icons</string>
+    <string name="pref_user_interface_height_sum">Für die Spielelemente wird eine %1$s verwendet.</string>
+    <string name="pref_user_interface_height_title">Höhe der Spieleelemente</string>
+    <string name="pref_user_interface_show_downloaded_images_sum_false">Für die Spiele werden die App Icons angezeigt.</string>
+    <string name="pref_user_interface_show_downloaded_images_sum_true">Für die Spiele werden die heruntergeladenen Bilder angezeigt (wenn verfügbar).</string>
+    <string name="pref_user_interface_show_downloaded_images_title">Zeige heruntergeladene Bilder</string>
 </resources>

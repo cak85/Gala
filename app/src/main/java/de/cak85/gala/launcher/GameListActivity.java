@@ -6,8 +6,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -60,6 +62,7 @@ public class GameListActivity extends AppCompatActivity {
 	private int spacing;
 	private int height;
 	private boolean showShadow;
+	private boolean showDownloadedImages;
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +85,8 @@ public class GameListActivity extends AppCompatActivity {
 				PreferenceManager.getDefaultSharedPreferences(this);
 		showShadow = sharedPreferences.getBoolean(
 				getString(R.string.pref_key_user_interface_shadow), false);
+		showDownloadedImages = sharedPreferences.getBoolean(
+				getString(R.string.pref_key_user_interface_show_downloaded_images), false);
 		spacing = Integer.valueOf(sharedPreferences.getString(
 				getString(R.string.pref_key_user_interface_spacing),
 				DEFAULT_SPACING).replaceAll("[\\D]", ""));
@@ -258,7 +263,20 @@ public class GameListActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
             holder.mItem = mValues.get(position);
-            holder.mImageView.setImageDrawable(mValues.get(position).getIcon());
+	        Drawable image;
+	        if (showDownloadedImages) {
+		        final Bitmap bitmap = ApplicationManager.getInstance().getImage(GameListActivity.this,
+				        mValues.get(position));
+		        if (bitmap != null) {
+			        image = new BitmapDrawable(getResources(),
+					        bitmap);
+		        } else {
+			        image = mValues.get(position).getIcon();
+		        }
+	        } else {
+		        image = mValues.get(position).getIcon();
+	        }
+            holder.mImageView.setImageDrawable(image);
             holder.mIdView.setText(mValues.get(position).getName());
 
 	        GridLayoutManager.LayoutParams lp =
