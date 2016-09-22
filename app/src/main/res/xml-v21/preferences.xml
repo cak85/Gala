@@ -22,9 +22,14 @@
             android:entries="@array/pref_user_interface_spacing_entries"
             android:entryValues="@array/pref_user_interface_spacing_entry_values"
             android:defaultValue="4dp"/>
+        <CheckBoxPreference
+            android:key="@string/pref_key_user_interface_shadow"
+            android:summary="@string/pref_user_interface_shadow_sum_false"
+            android:title="@string/pref_user_interface_shadow_title"
+            android:defaultValue="false"/>
     </PreferenceCategory>
 
-    <PreferenceCategory android:key="@string/pref_cat_bluetooth" android:title="@string/bluetooth_settings">
+    <PreferenceCategory android:title="@string/bluetooth_settings">
         <CheckBoxPreference
             android:key="@string/pref_key_bluetooth_detection_service"
             android:summary="@string/pref_bluetooth_detection_summ"
