@@ -36,7 +36,7 @@
             android:defaultValue="false"/>
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/bluetooth_settings">
+    <PreferenceCategory android:key="@string/pref_cat_bluetooth" android:title="@string/bluetooth_settings">
         <CheckBoxPreference
             android:key="@string/pref_key_bluetooth_detection_service"
             android:summary="@string/pref_bluetooth_detection_summ"
