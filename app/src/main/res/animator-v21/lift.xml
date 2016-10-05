@@ -2,7 +2,8 @@
 <!-- animate the translationZ property of a view when pressed -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_enabled="true"
-        android:state_focused="false">
+        android:state_focused="false"
+        android:state_selected="false">
         <set>
             <objectAnimator
                 android:duration="@android:integer/config_shortAnimTime"
@@ -21,12 +22,12 @@
                 android:valueType="floatType"/>
         </set>
     </item>
-    <item android:state_focused="true">
+    <item android:state_selected="false" android:state_focused="true">
         <set>
             <objectAnimator
                 android:duration="@android:integer/config_shortAnimTime"
                 android:propertyName="translationZ"
-                android:valueTo="12dp"
+                android:valueTo="6dp"
                 android:valueType="floatType"/>
             <objectAnimator
                 android:duration="@android:integer/config_shortAnimTime"
@@ -37,6 +38,25 @@
                 android:duration="@android:integer/config_shortAnimTime"
                 android:propertyName="scaleY"
                 android:valueTo="1.05"
+                android:valueType="floatType"/>
+        </set>
+    </item>
+    <item android:state_selected="true" android:state_focused="true">
+        <set>
+            <objectAnimator
+                android:duration="@android:integer/config_shortAnimTime"
+                android:propertyName="translationZ"
+                android:valueTo="8dp"
+                android:valueType="floatType"/>
+            <objectAnimator
+                android:duration="@android:integer/config_shortAnimTime"
+                android:propertyName="scaleX"
+                android:valueTo="1.08"
+                android:valueType="floatType"/>
+            <objectAnimator
+                android:duration="@android:integer/config_shortAnimTime"
+                android:propertyName="scaleY"
+                android:valueTo="1.08"
                 android:valueType="floatType"/>
         </set>
     </item>
