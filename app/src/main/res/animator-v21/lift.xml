@@ -41,7 +41,7 @@
                 android:valueType="floatType"/>
         </set>
     </item>
-    <item android:state_selected="true" android:state_focused="true">
+    <item android:state_selected="true">
         <set>
             <objectAnimator
                 android:duration="@android:integer/config_shortAnimTime"
