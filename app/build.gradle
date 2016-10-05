@@ -8,8 +8,8 @@ android {
         applicationId "de.cak85.gala"
         minSdkVersion 14
         targetSdkVersion 24
-        versionCode 2
-        versionName "1.0.1"
+        versionCode 1
+        versionName "1.0.0"
     }
     buildTypes {
         release {

@@ -265,6 +265,14 @@ public class GameListActivity extends AppCompatActivity {
 	        context = parent.getContext();
 	        View view = LayoutInflater.from(context)
                     .inflate(R.layout.game_list_content, parent, false);
+
+	        // save the order of the list after an item was moved
+	        registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+		        @Override
+		        public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
+			        ApplicationManager.getInstance().save(GameListActivity.this);
+		        }
+	        });
             return new ViewHolder(view);
         }
 
