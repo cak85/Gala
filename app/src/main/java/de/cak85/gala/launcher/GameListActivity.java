@@ -22,7 +22,10 @@ import android.support.v7.graphics.Palette;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -33,12 +36,15 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.util.Collections;
 import java.util.List;
 
 import de.cak85.gala.R;
 import de.cak85.gala.applications.ApplicationItem;
 import de.cak85.gala.applications.ApplicationManager;
 import de.cak85.gala.applications.AsyncTaskListener;
+import de.cak85.gala.interfaces.ItemTouchHelperAdapter;
+import de.cak85.gala.interfaces.ItemTouchHelperViewHolder;
 import de.cak85.gala.preferences.PreferencesActivity;
 
 public class GameListActivity extends AppCompatActivity {
@@ -63,6 +69,7 @@ public class GameListActivity extends AppCompatActivity {
 	private int height;
 	private boolean showShadow;
 	private boolean showDownloadedImages;
+	private int columns;
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,10 +100,7 @@ public class GameListActivity extends AppCompatActivity {
 		height = Integer.valueOf(sharedPreferences.getString(
 				getString(R.string.pref_key_user_interface_height),
 				DEFAULT_HEIGHT).replaceAll("[\\D]", ""));
-	}
-
-	private int getColumns(SharedPreferences sharedPreferences) {
-		return  Integer.valueOf(sharedPreferences.getString(
+		columns = Integer.valueOf(sharedPreferences.getString(
 				getString(R.string.pref_key_user_interface_num_columns),
 				String.valueOf(getResources().getInteger(R.integer.num_grids))));
 	}
@@ -127,7 +131,7 @@ public class GameListActivity extends AppCompatActivity {
 	        View recyclerView = findViewById(R.id.item_list);
 	        assert recyclerView != null;
 	        ((GridLayoutManager) ((RecyclerView) recyclerView)
-			        .getLayoutManager()).setSpanCount(getColumns(sharedPreferences));
+			        .getLayoutManager()).setSpanCount(columns);
 	        mAdapter.notifyDataSetChanged();
         }
     }
@@ -153,11 +157,12 @@ public class GameListActivity extends AppCompatActivity {
 	}
 
 	private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setLayoutManager(new GridLayoutManager(this,
-		        getColumns(PreferenceManager.getDefaultSharedPreferences(this))));
+        recyclerView.setLayoutManager(new GridLayoutManager(this, columns));
 		handleFirstRun();
 		mAdapter = new SimpleItemRecyclerViewAdapter(ApplicationManager.getInstance().getGames());
         recyclerView.setAdapter(mAdapter);
+		ItemTouchHelper touchHelper = new ItemTouchHelper(new ItemTouchHelperCallback(mAdapter));
+		touchHelper.attachToRecyclerView(recyclerView);
     }
 
 	private void handleFirstRun() {
@@ -243,12 +248,15 @@ public class GameListActivity extends AppCompatActivity {
 	}
 
 	public class SimpleItemRecyclerViewAdapter
-            extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
+            extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder>
+			implements ItemTouchHelperAdapter {
 
         private final List<ApplicationItem> mValues;
 	    private Context context;
+		private float density;
+		private long keyDownTime;
 
-	    private SimpleItemRecyclerViewAdapter(List<ApplicationItem> items) {
+		private SimpleItemRecyclerViewAdapter(List<ApplicationItem> items) {
             mValues = items;
         }
 
@@ -261,7 +269,7 @@ public class GameListActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onBindViewHolder(final ViewHolder holder, int position) {
+        public void onBindViewHolder(final ViewHolder holder, final int position) {
             holder.mItem = mValues.get(position);
 	        Drawable image;
 	        if (showDownloadedImages) {
@@ -283,7 +291,7 @@ public class GameListActivity extends AppCompatActivity {
 			        new GridLayoutManager.LayoutParams(
 					        GridLayoutManager.LayoutParams.MATCH_PARENT,
 					        GridLayoutManager.LayoutParams.WRAP_CONTENT);
-	        final float density = context.getResources().getDisplayMetrics().density;
+	        density = context.getResources().getDisplayMetrics().density;
 	        int margin = (int) (density * spacing);
 	        lp.setMargins(margin, margin, margin, margin);
 	        holder.mView.setLayoutParams(lp);
@@ -337,6 +345,54 @@ public class GameListActivity extends AppCompatActivity {
 	                }
                 }
             });
+	        holder.mView.setOnKeyListener(new View.OnKeyListener() {
+		        @Override
+		        public boolean onKey(View v, int keyCode, KeyEvent event) {
+			        final int i = holder.getAdapterPosition();
+			        Log.i("KeyEvent", event.toString());
+			        if (event.isLongPress()) {
+				        v.setSelected(true);
+				        keyDownTime = event.getDownTime();
+				        return true;
+			        } else if (keyDownTime < event.getDownTime() && v.isSelected()
+					        && (event.getKeyCode() == KeyEvent.KEYCODE_BUTTON_A
+					        || event.getKeyCode() == KeyEvent.KEYCODE_BUTTON_B
+			                || event.getKeyCode() == KeyEvent.KEYCODE_DPAD_CENTER)) {
+				        v.setSelected(false);
+				        return true;
+			        } else if (v.isSelected()) {
+				        if (i < mValues.size() - 1 && event.getAction() == KeyEvent.ACTION_DOWN
+						        && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
+					        Collections.swap(mValues, i, i + 1);
+					        notifyItemMoved(i, i + 1);
+					        return true;
+				        } else if (i > 0 && event.getAction() == KeyEvent.ACTION_DOWN
+						        && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
+					        Collections.swap(mValues, i, i - 1);
+					        notifyItemMoved(i, i - 1);
+					        return true;
+				        } else if (i + columns < mValues.size()
+						        && event.getAction() == KeyEvent.ACTION_DOWN
+						        && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_DOWN) {
+					        Collections.swap(mValues, i, i + columns);
+					        notifyItemMoved(i, i + columns);
+					        return true;
+				        } else if (i - columns >= 0 && event.getAction() == KeyEvent.ACTION_DOWN
+						        && event.getKeyCode() == KeyEvent.KEYCODE_DPAD_UP) {
+					        Collections.swap(mValues, i, i - columns);
+					        notifyItemMoved(i, i - columns);
+					        return true;
+				        }
+			        }
+			        return false;
+		        }
+	        });
+	        holder.mView.setOnLongClickListener(new View.OnLongClickListener() {
+		        @Override
+		        public boolean onLongClick(View v) {
+			        return true;
+		        }
+	        });
         }
 
         @Override
@@ -344,7 +400,21 @@ public class GameListActivity extends AppCompatActivity {
             return mValues.size();
         }
 
-        class ViewHolder extends RecyclerView.ViewHolder {
+		@Override
+		public void onItemMove(int fromPosition, int toPosition) {
+			if (fromPosition < toPosition) {
+				for (int i = fromPosition; i < toPosition; i++) {
+					Collections.swap(mValues, i, i + 1);
+				}
+			} else {
+				for (int i = fromPosition; i > toPosition; i--) {
+					Collections.swap(mValues, i, i - 1);
+				}
+			}
+			notifyItemMoved(fromPosition, toPosition);
+		}
+
+		class ViewHolder extends RecyclerView.ViewHolder implements ItemTouchHelperViewHolder {
             private final View mView;
             private final ImageView mImageView;
             private final TextView mIdView;
@@ -362,6 +432,16 @@ public class GameListActivity extends AppCompatActivity {
             public String toString() {
                 return super.toString() + " '" + mIdView.getText() + "'";
             }
-        }
+
+			@Override
+			public void onItemSelected() {
+				mView.setSelected(true);
+			}
+
+			@Override
+			public void onItemClear() {
+				mView.setSelected(false);
+			}
+		}
     }
 }
