@@ -108,7 +108,6 @@ public class GameListActivity extends AppCompatActivity {
 		orientationScreen= Integer.valueOf(sharedPreferences.getString(
 				getString(R.string.pref_key_user_interface_orientation),
 				String.valueOf(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE)));
-		Log.i("GALA", "v"+orientationScreen);
 	}
 
 	@Override
