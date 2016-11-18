@@ -1,11 +1,14 @@
 package de.cak85.gala.preferences;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
@@ -13,11 +16,13 @@ import android.preference.MultiSelectListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import de.cak85.gala.R;
 
@@ -88,6 +93,14 @@ public class PreferencesFragment extends PreferenceFragment
 				p.setSummary(getActivity().getString(
 						R.string.pref_selected_bluetooth_devices_summ));
 			}
+		} else if (key.equals(getActivity().getString(R.string.pref_key_user_interface_orientation))) {
+			ListPreference l = (ListPreference) findPreference(key);
+			String entry = getCurrentLocale().getLanguage().equals("en")
+					? l.getEntry().toString().toLowerCase() : l.getEntry().toString();
+			//noinspection WrongConstant
+			getActivity().setRequestedOrientation(Integer.parseInt(l.getValue()));
+			l.setSummary(getActivity().getString(
+					R.string.pref_user_interface_orientation_sum, entry));
 		} else if (key.equals(getActivity().getString(R.string.pref_key_user_interface_num_columns))) {
 			ListPreference l = (ListPreference) findPreference(key);
 			l.setSummary(getActivity().getString(
@@ -119,6 +132,16 @@ public class PreferencesFragment extends PreferenceFragment
 			ListPreference l = (ListPreference) findPreference(key);
 			l.setSummary(getActivity().getString(
 					R.string.pref_user_interface_height_sum, l.getEntry()));
+		}
+	}
+
+	@TargetApi(Build.VERSION_CODES.N)
+	public Locale getCurrentLocale(){
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
+			return getResources().getConfiguration().getLocales().get(0);
+		} else{
+			//noinspection deprecation
+			return getResources().getConfiguration().locale;
 		}
 	}
 

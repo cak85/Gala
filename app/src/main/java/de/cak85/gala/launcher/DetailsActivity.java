@@ -4,6 +4,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -118,6 +119,11 @@ public class DetailsActivity extends AppCompatActivity {
 			}
 		});
 		fab.requestFocus();
+
+		//noinspection WrongConstant
+		setRequestedOrientation(Integer.valueOf(sharedPreferences.getString(
+				getString(R.string.pref_key_user_interface_orientation),
+				String.valueOf(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE))));
 	}
 
 	@Override

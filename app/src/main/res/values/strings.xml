@@ -44,4 +44,7 @@
     <string name="pref_user_interface_show_downloaded_images_sum_false">For the game items the app icons are shown.</string>
     <string name="pref_user_interface_show_downloaded_images_sum_true">For the game items the downloaded images are shown (if available).</string>
     <string name="pref_user_interface_show_downloaded_images_title">Show downloaded images</string>
+    <string name="pref_key_user_interface_orientation" translatable="false">pref_key_user_interface_orientation</string>
+    <string name="pref_user_interface_orientation_sum">The screen is in %1$s orientation.</string>
+    <string name="pref_user_interface_orientation_title">Screen orientation</string>
 </resources>

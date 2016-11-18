@@ -2,6 +2,13 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory android:title="@string/user_interface_settings_category">
         <ListPreference
+            android:key="@string/pref_key_user_interface_orientation"
+            android:summary="@string/pref_user_interface_orientation_sum"
+            android:title="@string/pref_user_interface_orientation_title"
+            android:entries="@array/pref_user_interface_orientation_entries"
+            android:entryValues="@array/pref_user_interface_orientation_entry_values"
+            android:defaultValue="@integer/default_orientation"/>
+        <ListPreference
             android:key="@string/pref_key_user_interface_num_columns"
             android:summary="@string/pref_user_interface_num_columns_sum"
             android:title="@string/pref_user_interface_num_columns_title"

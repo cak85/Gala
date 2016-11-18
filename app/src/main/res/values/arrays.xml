@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="empty_array" />
+    <string-array name="pref_user_interface_orientation_entries">
+        <item>@string/orientation_landscape</item>
+        <item>@string/orientation_portrait</item>
+        <item>@string/orientation_system</item>
+    </string-array>
+    <string-array name="pref_user_interface_orientation_entry_values" translatable="false">
+        <item>6</item>
+        <item>7</item>
+        <item>2</item>
+    </string-array>
     <string-array name="pref_user_interface_num_columns_entry_values" translatable="false">
         <item>2</item>
         <item>3</item>
@@ -34,6 +44,7 @@
         <item>96dp</item>
         <item>128dp</item>
     </string-array>
+    <string-array name="pref_user_interface_rientation_entry_values"/>
     <string name="spacing_no">no spacing</string>
     <string name="spacing_small">small spacing</string>
     <string name="spacing_middle">middle spacing</string>
@@ -42,4 +53,7 @@
     <string name="height_small">small height</string>
     <string name="height_middle">middle height</string>
     <string name="height_big">big height</string>
+    <string name="orientation_landscape">Landscape</string>
+    <string name="orientation_portrait">Portrait</string>
+    <string name="orientation_system">System setting</string>
 </resources>

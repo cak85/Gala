@@ -1,7 +1,11 @@
 package de.cak85.gala.launcher;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -43,6 +47,14 @@ public class EditGamesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_games);
 
+	    final SharedPreferences sharedPreferences =
+			    PreferenceManager.getDefaultSharedPreferences(this);
+	    int orientationScreen =Integer.valueOf(sharedPreferences.getString(
+			    getString(R.string.pref_key_user_interface_orientation),
+			    String.valueOf(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE)));
+	    //noinspection WrongConstant
+	    setRequestedOrientation(orientationScreen);
+
         View recyclerView = findViewById(R.id.edit_games_list);
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
@@ -54,7 +66,7 @@ public class EditGamesActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    @Override
+	@Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             // Respond to the action bar's Up/Home button
@@ -73,8 +85,13 @@ public class EditGamesActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-        recyclerView.addItemDecoration(new GridDividerItemDecoration(this));
+	    if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+		    recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
+		    recyclerView.addItemDecoration(new GridDividerItemDecoration(this));
+	    } else {
+		    recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+		    recyclerView.addItemDecoration(new GridDividerItemDecoration(this));
+	    }
         if (applications == null) {
 	        applications = new ArrayList<>();
             ApplicationManager.getInstance().getInstalledApplications(this,

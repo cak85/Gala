@@ -16,6 +16,7 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 import android.text.Html;
 import android.util.DisplayMetrics;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
@@ -33,6 +34,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -46,6 +48,8 @@ import de.cak85.gala.applications.database.DBHelper;
  * Created by ckuster on 29.01.2016.
  */
 public class ApplicationManager {
+
+	private static final String TAG = "Gala/ApplicationManager";
 
 	private static final String PREFS_KEY = "chosen_games";
 
@@ -84,8 +88,16 @@ public class ApplicationManager {
 			if (games == null) {
 				games = new ArrayList<>();
 			} else {
-				for (ApplicationItem applicationItem : games) {
-					setIcon(context, applicationItem);
+				Iterator<ApplicationItem> iterator = games.iterator();
+				while (iterator.hasNext()) {
+					ApplicationItem applicationItem = iterator.next();
+					try {
+						setIcon(context, applicationItem);
+					} catch (PackageManager.NameNotFoundException e) {
+						iterator.remove();
+						Log.w(TAG, "could not find package " + applicationItem.getPackageName()
+								+ ": deleted.");
+					}
 				}
 			}
 		} catch (JsonParseException e) {
@@ -106,38 +118,42 @@ public class ApplicationManager {
 		return null;
 	}
 
-	private void setIcon(Context context, ApplicationItem applicationItem) {
+	/**
+	 * Sets the icon for the given application item.
+	 *
+	 * @param context The current application context
+	 * @param applicationItem The application item
+	 * @throws PackageManager.NameNotFoundException if the application item can not be found
+	 * on the system
+	 */
+	private void setIcon(Context context, ApplicationItem applicationItem)
+			throws PackageManager.NameNotFoundException {
 		// Get the application's resources
 		Resources res = null;
 		Configuration originalConfig = null;
 		DisplayMetrics dm = null;
 		PackageManager pm = context.getPackageManager();
-		try {
-			final ApplicationInfo packageInfo = pm.getApplicationInfo(
-					applicationItem.getPackageName(), PackageManager.GET_META_DATA);
-			res = pm.getResourcesForApplication(packageInfo);
-			// Get a copy of the configuration, and set it to the desired resolution
-			Configuration config = res.getConfiguration();
-			originalConfig = new Configuration(config);
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-				config.densityDpi =  DisplayMetrics.DENSITY_XXXHIGH;
-			} else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-				config.densityDpi =  DisplayMetrics.DENSITY_XXHIGH;
-			}
+		final ApplicationInfo packageInfo = pm.getApplicationInfo(
+				applicationItem.getPackageName(), PackageManager.GET_META_DATA);
+		res = pm.getResourcesForApplication(packageInfo);
+		// Get a copy of the configuration, and set it to the desired resolution
+		Configuration config = res.getConfiguration();
+		originalConfig = new Configuration(config);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+			config.densityDpi =  DisplayMetrics.DENSITY_XXXHIGH;
+		} else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+			config.densityDpi =  DisplayMetrics.DENSITY_XXHIGH;
+		}
 
-			// Update the configuration with the desired resolution
-			dm = res.getDisplayMetrics();
-			res.updateConfiguration(config, dm);
+		// Update the configuration with the desired resolution
+		dm = res.getDisplayMetrics();
+		res.updateConfiguration(config, dm);
 
-			// Grab the app icon
-			applicationItem.setIcon(packageInfo.loadIcon(pm));
-		} catch (PackageManager.NameNotFoundException e) {
-			e.printStackTrace();
-		} finally {
-			if (originalConfig != null) {
-				// Set our configuration back to what it was
-				res.updateConfiguration(originalConfig, dm);
-			}
+		// Grab the app icon
+		applicationItem.setIcon(packageInfo.loadIcon(pm));
+		if (originalConfig != null) {
+			// Set our configuration back to what it was
+			res.updateConfiguration(originalConfig, dm);
 		}
 	}
 

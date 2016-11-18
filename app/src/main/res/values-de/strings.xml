@@ -35,4 +35,6 @@
     <string name="pref_user_interface_show_downloaded_images_sum_false">Für die Spiele werden die App Icons angezeigt.</string>
     <string name="pref_user_interface_show_downloaded_images_sum_true">Für die Spiele werden die heruntergeladenen Bilder angezeigt (wenn verfügbar).</string>
     <string name="pref_user_interface_show_downloaded_images_title">Zeige heruntergeladene Bilder</string>
+    <string name="pref_user_interface_orientation_sum">Der Bildschirm ist in %1$s-Orientierung.</string>
+    <string name="pref_user_interface_orientation_title">Bildschirmorientierung</string>
 </resources>

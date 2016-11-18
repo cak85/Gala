@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
@@ -70,6 +71,7 @@ public class GameListActivity extends AppCompatActivity {
 	private boolean showShadow;
 	private boolean showDownloadedImages;
 	private int columns;
+	private int orientationScreen;
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +105,10 @@ public class GameListActivity extends AppCompatActivity {
 		columns = Integer.valueOf(sharedPreferences.getString(
 				getString(R.string.pref_key_user_interface_num_columns),
 				String.valueOf(getResources().getInteger(R.integer.num_grids))));
+		orientationScreen= Integer.valueOf(sharedPreferences.getString(
+				getString(R.string.pref_key_user_interface_orientation),
+				String.valueOf(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE)));
+		Log.i("GALA", "v"+orientationScreen);
 	}
 
 	@Override
@@ -125,8 +131,6 @@ public class GameListActivity extends AppCompatActivity {
 	            ApplicationManager.getInstance().save(this);
             }
         } else if (requestCode == SHOW_PREFERENCES_REQUEST) {
-	        SharedPreferences sharedPreferences =
-			        PreferenceManager.getDefaultSharedPreferences(this);
 	        reloadPreferences();
 	        View recyclerView = findViewById(R.id.item_list);
 	        assert recyclerView != null;
@@ -154,11 +158,13 @@ public class GameListActivity extends AppCompatActivity {
 			ft.commit();
 		}
 		super.onResume();
+		//noinspection WrongConstant
+		setRequestedOrientation(orientationScreen);
+		handleFirstRun();
 	}
 
 	private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
         recyclerView.setLayoutManager(new GridLayoutManager(this, columns));
-		handleFirstRun();
 		mAdapter = new SimpleItemRecyclerViewAdapter(ApplicationManager.getInstance().getGames());
         recyclerView.setAdapter(mAdapter);
 		ItemTouchHelper touchHelper = new ItemTouchHelper(new ItemTouchHelperCallback(mAdapter));
