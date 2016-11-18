@@ -8,6 +8,7 @@
     <string name="height_small">geringe Höhe</string>
     <string name="height_middle">mittlere Höhe</string>
     <string name="height_big">große Höhe</string>
+    <string name="height_extra_big">sehr große Höhe</string>
     <string name="orientation_landscape">Landscape</string>
     <string name="orientation_portrait">Portrait</string>
     <string name="orientation_system">Systemeinstellung</string>

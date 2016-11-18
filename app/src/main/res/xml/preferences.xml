@@ -21,7 +21,7 @@
             android:title="@string/pref_user_interface_height_title"
             android:entries="@array/pref_user_interface_height_entries"
             android:entryValues="@array/pref_user_interface_height_entry_values"
-            android:defaultValue="64dp"/>
+            android:defaultValue="96dp"/>
         <ListPreference
             android:key="@string/pref_key_user_interface_spacing"
             android:summary="@string/pref_user_interface_spacing_sum"

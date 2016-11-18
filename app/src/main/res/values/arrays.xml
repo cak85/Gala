@@ -38,11 +38,13 @@
         <item>@string/height_small</item>
         <item>@string/height_middle</item>
         <item>@string/height_big</item>
+        <item>@string/height_extra_big</item>
     </string-array>
     <string-array name="pref_user_interface_height_entry_values" translatable="false">
         <item>64dp</item>
         <item>96dp</item>
         <item>128dp</item>
+        <item>160dp</item>
     </string-array>
     <string-array name="pref_user_interface_rientation_entry_values"/>
     <string name="spacing_no">no spacing</string>
@@ -53,6 +55,7 @@
     <string name="height_small">small height</string>
     <string name="height_middle">middle height</string>
     <string name="height_big">big height</string>
+    <string name="height_extra_big">extra big height</string>
     <string name="orientation_landscape">Landscape</string>
     <string name="orientation_portrait">Portrait</string>
     <string name="orientation_system">System setting</string>
