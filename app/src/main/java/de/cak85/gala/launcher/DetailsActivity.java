@@ -8,6 +8,7 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
@@ -16,6 +17,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
@@ -25,6 +27,8 @@ import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
+import android.transition.Transition;
+import android.view.Display;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -41,6 +45,7 @@ public class DetailsActivity extends AppCompatActivity {
 	public static final int TRANSITION_REVERSE_MILLIS = 250;
 	private ApplicationItem app;
 	private TransitionDrawable transitionDrawable;
+	private FloatingActionButton fab;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -58,8 +63,12 @@ public class DetailsActivity extends AppCompatActivity {
 
 		setTitle(app.getName());
 		final ImageView imageView = (ImageView) findViewById(R.id.details_image);
+		Display display = getWindowManager().getDefaultDisplay();
+		Point size = new Point();
+		display.getSize(size);
 		BitmapDrawable image = new BitmapDrawable(getResources(),
-				 ApplicationManager.getInstance().getImage(this, app));
+				 ApplicationManager.getInstance().getImage(
+						 this, app, size.x, -1));
 		final SharedPreferences sharedPreferences =
 				PreferenceManager.getDefaultSharedPreferences(this);
 		boolean showDownloadedImages = sharedPreferences.getBoolean(
@@ -99,7 +108,7 @@ public class DetailsActivity extends AppCompatActivity {
 			getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 		}
 
-		final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+		fab = (FloatingActionButton) findViewById(R.id.fab);
 		fab.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
@@ -118,12 +127,42 @@ public class DetailsActivity extends AppCompatActivity {
 				ft.commit();
 			}
 		});
-		fab.requestFocus();
 
 		//noinspection WrongConstant
 		setRequestedOrientation(Integer.valueOf(sharedPreferences.getString(
 				getString(R.string.pref_key_user_interface_orientation),
 				String.valueOf(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE))));
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			getWindow().getSharedElementEnterTransition().addListener(new Transition.TransitionListener() {
+				@Override
+				public void onTransitionStart(Transition transition) {
+				}
+				@Override
+				public void onTransitionEnd(Transition transition) {
+					fab.show();
+					fab.requestFocus();
+				}
+				@Override
+				public void onTransitionCancel(Transition transition) {
+				}
+				@Override
+				public void onTransitionPause(Transition transition) {
+				}
+				@Override
+				public void onTransitionResume(Transition transition) {
+				}
+			});
+		} else {
+			final Handler handler = new Handler();
+			handler.postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					fab.show();
+					fab.requestFocus();
+				}
+			}, 500);
+		}
 	}
 
 	@Override
@@ -140,6 +179,12 @@ public class DetailsActivity extends AppCompatActivity {
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				fab.setVisibility(View.GONE);
+			}
+		});
 		transitionDrawable.reverseTransition(TRANSITION_REVERSE_MILLIS);
 	}
 

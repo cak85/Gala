@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -26,6 +27,7 @@ import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -260,6 +262,7 @@ public class GameListActivity extends AppCompatActivity {
 	    private Context context;
 		private float density;
 		private long keyDownTime;
+		private Drawable image;
 
 		private SimpleItemRecyclerViewAdapter(List<ApplicationItem> items) {
             mValues = items;
@@ -286,8 +289,12 @@ public class GameListActivity extends AppCompatActivity {
             holder.mItem = mValues.get(position);
 	        Drawable image;
 	        if (showDownloadedImages) {
+		        Display display = getWindowManager().getDefaultDisplay();
+		        Point size = new Point();
+		        display.getSize(size);
 		        final Bitmap bitmap = ApplicationManager.getInstance().getImage(
-				        GameListActivity.this, mValues.get(position));
+				        GameListActivity.this, mValues.get(position),
+				        (int) (size.x / ((float) columns)), height);
 		        if (bitmap != null) {
 			        image = new BitmapDrawable(getResources(),
 					        bitmap);
@@ -408,7 +415,7 @@ public class GameListActivity extends AppCompatActivity {
 	        });
         }
 
-        @Override
+		@Override
         public int getItemCount() {
             return mValues.size();
         }
