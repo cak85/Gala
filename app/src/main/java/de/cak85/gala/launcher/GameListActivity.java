@@ -71,7 +71,6 @@ public class GameListActivity extends AppCompatActivity {
 	private boolean showShadow;
 	private boolean showDownloadedImages;
 	private int columns;
-	private int orientationScreen;
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +88,12 @@ public class GameListActivity extends AppCompatActivity {
         mActionBarToolbar.setTitle(getResources().getString(R.string.app_name));
     }
 
+	@Override
+	protected void onStart() {
+		super.onStart();
+		handleFirstRun();
+	}
+
 	private void reloadPreferences() {
 		final SharedPreferences sharedPreferences =
 				PreferenceManager.getDefaultSharedPreferences(this);
@@ -105,9 +110,10 @@ public class GameListActivity extends AppCompatActivity {
 		columns = Integer.valueOf(sharedPreferences.getString(
 				getString(R.string.pref_key_user_interface_num_columns),
 				String.valueOf(getResources().getInteger(R.integer.num_grids))));
-		orientationScreen= Integer.valueOf(sharedPreferences.getString(
+		//noinspection WrongConstant
+		setRequestedOrientation(Integer.valueOf(sharedPreferences.getString(
 				getString(R.string.pref_key_user_interface_orientation),
-				String.valueOf(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE)));
+				String.valueOf(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE))));
 	}
 
 	@Override
@@ -140,26 +146,19 @@ public class GameListActivity extends AppCompatActivity {
     }
 
 	@Override
-	protected void onPause() {
-		super.onPause();
-	}
-
-	@Override
 	protected void onResume() {
 		//View recyclerView = findViewById(R.id.item_list);
 		//recyclerView.getRootView().setBackgroundColor(getResources().getColor(android.R.color.background_light));
 		FragmentManager fm = getFragmentManager();
 		StartScreenFragment f = (StartScreenFragment) fm.findFragmentByTag("tag");
 		if (f != null) {
+			Log.i("App GALA", "f: "+f);
 			FragmentTransaction ft = fm.beginTransaction();
 			ft.remove(f);
 			ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
 			ft.commit();
 		}
 		super.onResume();
-		//noinspection WrongConstant
-		setRequestedOrientation(orientationScreen);
-		handleFirstRun();
 	}
 
 	private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
@@ -174,7 +173,8 @@ public class GameListActivity extends AppCompatActivity {
 		final ApplicationManager applicationManager = ApplicationManager.getInstance();
 		final SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 		if (settings.getBoolean("isFirstRun", true)) {
-			DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+			final DialogInterface.OnClickListener dialogClickListener =
+					new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					switch (which){
@@ -183,11 +183,11 @@ public class GameListActivity extends AppCompatActivity {
 					}
 				}
 			};
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			final AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setMessage(getString(R.string.first_run_question))
 					.setPositiveButton(getString(android.R.string.yes),
-							dialogClickListener).setNegativeButton(getString(android.R.string.no),
-					dialogClickListener).show();
+							dialogClickListener).setNegativeButton(
+					getString(android.R.string.no), dialogClickListener).show();
 			settings.edit().putBoolean("isFirstRun", false).apply();
 		} else {
 			applicationManager.load(this);
@@ -286,8 +286,8 @@ public class GameListActivity extends AppCompatActivity {
             holder.mItem = mValues.get(position);
 	        Drawable image;
 	        if (showDownloadedImages) {
-		        final Bitmap bitmap = ApplicationManager.getInstance().getImage(GameListActivity.this,
-				        mValues.get(position));
+		        final Bitmap bitmap = ApplicationManager.getInstance().getImage(
+				        GameListActivity.this, mValues.get(position));
 		        if (bitmap != null) {
 			        image = new BitmapDrawable(getResources(),
 					        bitmap);
