@@ -78,6 +78,9 @@ public class ApplicationManager {
 	}
 
 	public void load(Context context) {
+		if (!games.isEmpty()) {
+			return;
+		}
 		Gson gson = new Gson();
 		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
 		String jsonPreferences = sharedPref.getString(PREFS_KEY, "");
