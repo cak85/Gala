@@ -109,16 +109,69 @@ public class ApplicationManager {
 		}
 	}
 
-	public Bitmap getImage(Context context, ApplicationItem applicationItem) {
+	public Bitmap getImage(Context context, ApplicationItem applicationItem,
+	                       int width, int height) {
 		try {
 			ContextWrapper cw = new ContextWrapper(context);
 			File directory = cw.getDir("images", Context.MODE_PRIVATE);
 			File file = new File(directory, applicationItem.getPackageName() + ".png");
-			return BitmapFactory.decodeStream(new FileInputStream(file));
+
+			// First decode with inJustDecodeBounds=true to check dimensions
+			final BitmapFactory.Options options = new BitmapFactory.Options();
+			options.inJustDecodeBounds = true;
+			BitmapFactory.decodeStream(new FileInputStream(file), null, options);
+
+			// calculate dimensions
+			int reqWidth = width;
+			int reqHeight = height;
+			if (height > 0 && height > width) {
+				reqWidth = (int) (options.outWidth / (options.outHeight / ((float) reqHeight)));
+			} else if (width > 0 && width > height) {
+				reqHeight = (int) (options.outHeight / (options.outWidth / ((float) reqWidth)));
+			} else {
+				reqWidth = options.outWidth;
+				reqHeight = options.outHeight;
+			}
+
+			// Calculate inSampleSize
+			options.inSampleSize = calculateInSampleSize(options, width, height);
+
+			// Decode bitmap with inSampleSize set
+			options.inJustDecodeBounds = false;
+			return BitmapFactory.decodeStream(new FileInputStream(file), null, options);
 		} catch (FileNotFoundException | OutOfMemoryError e) {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	/**
+	 * from {@code https://developer.android.com/training/displaying-bitmaps/load-bitmap.html}
+	 *
+	 * @param options
+	 * @param reqWidth
+	 * @param reqHeight
+	 * @return
+	 */
+	private static int calculateInSampleSize(
+			BitmapFactory.Options options, int reqWidth, int reqHeight) {
+		// Raw height and width of image
+		final int height = options.outHeight;
+		final int width = options.outWidth;
+		int inSampleSize = 1;
+
+		if (height > reqHeight || width > reqWidth) {
+			final int halfHeight = height / 2;
+			final int halfWidth = width / 2;
+
+			// Calculate the largest inSampleSize value that is a power of 2 and keeps both
+			// height and width larger than the requested height and width.
+			while ((halfHeight / inSampleSize) >= reqHeight
+					&& (halfWidth / inSampleSize) >= reqWidth) {
+				inSampleSize *= 2;
+			}
+		}
+		return inSampleSize;
 	}
 
 	/**
@@ -341,7 +394,7 @@ public class ApplicationManager {
 					if (scrapeOnlyGames && !isGame) {
 						continue;
 					}
-					image = getImage(context, app);
+					image = getImage(context, app, 100, -1);
 				}
 				if (!checkedCategory || image == null || description == null) {
 					try {
