@@ -2,14 +2,14 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.1"
+    buildToolsVersion "26.0.0"
 
     defaultConfig {
         applicationId "de.cak85.gala"
-        minSdkVersion 14
+        minSdkVersion 16
         targetSdkVersion 25
-        versionCode 2
-        versionName "1.1.0"
+        versionCode 3
+        versionName "1.1.1"
     }
     buildTypes {
         release {
@@ -22,12 +22,12 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:25.0.1'
-    compile 'com.android.support:support-v13:25.0.1'
-    compile 'com.android.support:recyclerview-v7:25.0.1'
-    compile 'com.android.support:design:25.0.1'
+    compile 'com.android.support:appcompat-v7:25.4.0'
+    compile 'com.android.support:support-v13:25.4.0'
+    compile 'com.android.support:recyclerview-v7:25.4.0'
+    compile 'com.android.support:design:25.4.0'
     // compile 'jp.wasabeef:recyclerview-animators:2.1.0'
-    compile 'com.android.support:palette-v7:25.0.1'
-    compile 'com.google.code.gson:gson:2.5'
-    compile 'me.zhanghai.android.materialprogressbar:library:1.3.0'
+    compile 'com.android.support:palette-v7:25.4.0'
+    compile 'com.google.code.gson:gson:2.7'
+    compile 'me.zhanghai.android.materialprogressbar:library:1.4.1'
 }
