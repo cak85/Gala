@@ -5,6 +5,8 @@ import android.animation.Animator;
 import android.annotation.TargetApi;
 import android.app.Fragment;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -80,10 +82,21 @@ public class StartScreenFragment extends Fragment {
 
 	private void setupGameItem(View view) {
 		ImageView image = (ImageView) view.findViewById(R.id.startscreen_imageView);
-		image.setImageDrawable(gameItem.getIcon());
+		try {
+			image.setImageDrawable(gameItem.getIcon());
+		} catch (NullPointerException e) {
+			image.setImageDrawable(new ColorDrawable(getContrastColor(this.backgroundColor)));
+		}
 		TextView text = (TextView) view.findViewById(R.id.startscreen_textView);
 		text.setText(gameItem.getName());
 		text.setTextColor(textColor);
+	}
+
+	private static int getContrastColor(int color) {
+		double y = (299 * Color.red(color)
+				+ 587 * Color.green(color)
+				+ 114 * Color.blue(color)) / 1000;
+		return y >= 128 ? Color.BLACK : Color.WHITE;
 	}
 
 	public void setBackgroundColor(int backgroundColor) {

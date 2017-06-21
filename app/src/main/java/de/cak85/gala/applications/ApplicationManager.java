@@ -345,7 +345,9 @@ public class ApplicationManager {
 									public void onPostExecute(List<ApplicationItem> param) {
 										games.clear();
 										games.addAll(param);
-										progressDialog.dismiss();
+										if (progressDialog != null && progressDialog.isShowing()) {
+											progressDialog.dismiss();
+										}
 										if (listener != null)
 											listener.onPostExecute(param);
 									}
