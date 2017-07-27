@@ -87,10 +87,10 @@ public class ApplicationManager {
 
 		Type type = new TypeToken<List<ApplicationItem>>() {}.getType();
 		try {
-			games = gson.fromJson(jsonPreferences, type);
-			if (games == null) {
-				games = new ArrayList<>();
-			} else {
+			List<ApplicationItem> tempList = gson.fromJson(jsonPreferences, type);
+			if (tempList != null) {
+				games.clear();
+				games.addAll(tempList);
 				Iterator<ApplicationItem> iterator = games.iterator();
 				while (iterator.hasNext()) {
 					ApplicationItem applicationItem = iterator.next();
