@@ -7,6 +7,7 @@
     <string name="pref_selected_bluetooth_devices_summ_concrete">Wenn %1$s verbunden %2$s, dann wird Gala gestartet.</string>
     <string name="is_singular_auxiliary_verb">wird</string>
     <string name="is_plural_auxiliary_verb">werden</string>
+    <string name="or">oder</string>
     <string name="pref_bluetooth_detection_summ">Startet Gala, wenn ein ausgewähltes Bluetooth-Gerät sich verbindet.</string>
     <string name="pref_bluetooth_detection_title">Bluetooth-Geräte-Erkennung</string>
     <string name="error">Fehler</string>

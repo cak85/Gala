@@ -7,6 +7,7 @@
     <string name="pref_selected_bluetooth_devices_summ_concrete">If %1$s %2$s connected then GaLa will be started.</string>
     <string name="is_singular_auxiliary_verb">is</string>
     <string name="is_plural_auxiliary_verb">are</string>
+    <string name="or">or</string>
     <string name="pref_bluetooth_detection_summ">Starts GaLa when an selected bluetooth device is connected.</string>
     <string name="pref_bluetooth_detection_title">Bluetooth Device Detection</string>
     <string name="pref_key_bluetooth_detection_service" translatable="false">pref_key_bluetooth_detection_service</string>
