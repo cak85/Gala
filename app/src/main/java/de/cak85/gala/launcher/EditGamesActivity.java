@@ -35,6 +35,8 @@ import de.cak85.gala.applications.ApplicationManager;
 import de.cak85.gala.applications.AsyncTaskListener;
 
 /**
+ * Activity for editing the shown app items.
+ *
  * Created by ckuster on 13.01.2016.
  */
 public class EditGamesActivity extends AppCompatActivity {
@@ -44,8 +46,7 @@ public class EditGamesActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_games);
+	    super.onCreate(savedInstanceState);
 
 	    final SharedPreferences sharedPreferences =
 			    PreferenceManager.getDefaultSharedPreferences(this);
@@ -55,7 +56,9 @@ public class EditGamesActivity extends AppCompatActivity {
 	    //noinspection WrongConstant
 	    setRequestedOrientation(orientationScreen);
 
-        View recyclerView = findViewById(R.id.edit_games_list);
+	    setContentView(R.layout.activity_edit_games);
+
+	    View recyclerView = findViewById(R.id.edit_games_list);
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
 
@@ -129,12 +132,12 @@ public class EditGamesActivity extends AppCompatActivity {
         recyclerView.setItemAnimator(null);
     }
 
-    public class EditGamesRecyclerViewAdapter
+    class EditGamesRecyclerViewAdapter
             extends RecyclerView.Adapter<EditGamesRecyclerViewAdapter.ViewHolder> {
 
         private final List<ApplicationItem> mValues;
 
-        public EditGamesRecyclerViewAdapter(List<ApplicationItem> items) {
+        EditGamesRecyclerViewAdapter(List<ApplicationItem> items) {
             mValues = items;
         }
 
@@ -146,7 +149,7 @@ public class EditGamesActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onBindViewHolder(final ViewHolder holder, final int position) {
+        public void onBindViewHolder(final ViewHolder holder, int position) {
             holder.mItem = mValues.get(position);
 	        final List<ApplicationItem> games =
 			        ApplicationManager.getInstance().getGames();
@@ -166,7 +169,7 @@ public class EditGamesActivity extends AppCompatActivity {
                                         holder.mItem,
                                         null);
 				            }
-				            notifyItemChanged(position);
+				            notifyItemChanged(holder.getAdapterPosition());
 				            holder.mView.requestFocus();
 				            return false;
 			            }
@@ -203,14 +206,14 @@ public class EditGamesActivity extends AppCompatActivity {
             return mValues.size();
         }
 
-        public class ViewHolder extends RecyclerView.ViewHolder {
-            public final View mView;
-            public final ImageView mImageView;
-            public final TextView mTitleView;
-            public final CheckBox mCheckbox;
-            public ApplicationItem mItem;
+        class ViewHolder extends RecyclerView.ViewHolder {
+            final View mView;
+            final ImageView mImageView;
+            final TextView mTitleView;
+            final CheckBox mCheckbox;
+            ApplicationItem mItem;
 
-            public ViewHolder(View view) {
+            ViewHolder(View view) {
                 super(view);
                 mView = view;
                 mImageView = (ImageView) view.findViewById(R.id.edit_games_image);

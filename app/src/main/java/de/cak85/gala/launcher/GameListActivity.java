@@ -77,9 +77,10 @@ public class GameListActivity extends AppCompatActivity {
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_game_list);
 
 		reloadPreferences();
+
+		setContentView(R.layout.activity_game_list);
 
 	    View recyclerView = findViewById(R.id.item_list);
         assert recyclerView != null;
@@ -93,6 +94,7 @@ public class GameListActivity extends AppCompatActivity {
 	@Override
 	protected void onStart() {
 		super.onStart();
+		Log.i("GALA","onStart");
 		handleFirstRun();
 	}
 
@@ -193,6 +195,7 @@ public class GameListActivity extends AppCompatActivity {
 			settings.edit().putBoolean("isFirstRun", false).apply();
 		} else {
 			applicationManager.load(this);
+			mAdapter.notifyDataSetChanged();
 		}
 	}
 
@@ -254,7 +257,7 @@ public class GameListActivity extends AppCompatActivity {
 				dialogClickListener).show();
 	}
 
-	public class SimpleItemRecyclerViewAdapter
+	class SimpleItemRecyclerViewAdapter
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder>
 			implements ItemTouchHelperAdapter {
 
@@ -262,7 +265,6 @@ public class GameListActivity extends AppCompatActivity {
 	    private Context context;
 		private float density;
 		private long keyDownTime;
-		private Drawable image;
 
 		private SimpleItemRecyclerViewAdapter(List<ApplicationItem> items) {
             mValues = items;

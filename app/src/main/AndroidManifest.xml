@@ -14,7 +14,7 @@
         <activity
             android:name=".launcher.GameListActivity"
             android:label="@string/app_name"
-            android:screenOrientation="landscape"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -24,6 +24,7 @@
         </activity>
         <activity
             android:name=".launcher.EditGamesActivity"
+            android:screenOrientation="behind"
             android:parentActivityName=".launcher.GameListActivity"
             android:theme="@style/AppTheme.NoActionBar">
 
@@ -34,6 +35,7 @@
         </activity>
         <activity
             android:name=".preferences.PreferencesActivity"
+            android:screenOrientation="behind"
             android:parentActivityName=".launcher.GameListActivity">
 
             <!-- Parent activity meta-data to support 4.0 and lower -->
@@ -64,6 +66,7 @@
         <activity
             android:name=".launcher.DetailsActivity"
             android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="behind"
             android:parentActivityName=".launcher.GameListActivity">
 
             <!-- Parent activity meta-data to support 4.0 and lower -->
