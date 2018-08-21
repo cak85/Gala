@@ -224,7 +224,10 @@ public class ApplicationManager {
 		editor.apply();
 	}
 
-	private Uri saveImage(Context context, ApplicationItem app, Bitmap image) {
+	private void saveImage(Context context, ApplicationItem app, Bitmap image) {
+		if (image == null) {
+			return;
+		}
 		ContextWrapper cw = new ContextWrapper(context);
 		File directory = cw.getDir("images", Context.MODE_PRIVATE);
 		File file = new File(directory, app.getPackageName() + ".png");
@@ -240,7 +243,6 @@ public class ApplicationManager {
 				image.recycle();
 			}
 		}
-		return Uri.fromFile(file);
 	}
 
 	public void getInstalledApplications(Context context,
