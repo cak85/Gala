@@ -1,7 +1,7 @@
 package de.cak85.gala.launcher;
 
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.RecyclerView;
 
 import de.cak85.gala.interfaces.ItemTouchHelperAdapter;
 import de.cak85.gala.interfaces.ItemTouchHelperViewHolder;
