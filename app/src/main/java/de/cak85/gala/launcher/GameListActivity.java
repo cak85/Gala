@@ -50,6 +50,7 @@ import de.cak85.gala.applications.AsyncTaskListener;
 import de.cak85.gala.interfaces.ItemTouchHelperAdapter;
 import de.cak85.gala.interfaces.ItemTouchHelperViewHolder;
 import de.cak85.gala.preferences.PreferencesActivity;
+import de.cak85.gala.util.BitmapUtil;
 
 public class GameListActivity extends AppCompatActivity {
 
@@ -291,6 +292,8 @@ public class GameListActivity extends AppCompatActivity {
         public void onBindViewHolder(final ViewHolder holder, final int position) {
             holder.mItem = mValues.get(position);
 	        Drawable image;
+            final int iconBackgroundColor;
+
 	        if (showDownloadedImages) {
 		        Display display = getWindowManager().getDefaultDisplay();
 		        Point size = new Point();
@@ -301,11 +304,14 @@ public class GameListActivity extends AppCompatActivity {
 		        if (bitmap != null) {
 			        image = new BitmapDrawable(getResources(),
 					        bitmap);
+                    iconBackgroundColor = setColors(holder, image);
 		        } else {
 			        image = mValues.get(position).getIcon();
+                    iconBackgroundColor = setColors(holder, image);
 		        }
 	        } else {
 		        image = mValues.get(position).getIcon();
+                iconBackgroundColor = setColors(holder, image);
 	        }
             holder.mImageView.setImageDrawable(image);
             holder.mIdView.setText(mValues.get(position).getName());
@@ -314,7 +320,7 @@ public class GameListActivity extends AppCompatActivity {
 			        new GridLayoutManager.LayoutParams(
 					        GridLayoutManager.LayoutParams.MATCH_PARENT,
 					        GridLayoutManager.LayoutParams.WRAP_CONTENT);
-	        density = context.getResources().getDisplayMetrics().density;
+            float density = context.getResources().getDisplayMetrics().density;
 	        int margin = (int) (density * spacing);
 	        lp.setMargins(margin, margin, margin, margin);
 	        holder.mView.setLayoutParams(lp);
@@ -332,25 +338,6 @@ public class GameListActivity extends AppCompatActivity {
 	        params.height = (int) (height * density);
 	        holder.mImageView.setLayoutParams(params);
 
-            Palette palette = Palette.from(((BitmapDrawable)mValues.get(
-		            position).getIcon()).getBitmap()).generate();
-            final Palette.Swatch vibrantSwatch = palette.getVibrantSwatch();
-            if (vibrantSwatch != null) {
-                holder.mIdView.setBackgroundColor(vibrantSwatch.getRgb());
-                holder.mIdView.setTextColor(vibrantSwatch.getBodyTextColor());
-            } else {
-	            holder.mIdView.setBackgroundColor(palette.getMutedColor(
-			            ContextCompat.getColor(GameListActivity.this, R.color.colorPrimary)));
-                holder.mIdView.setTextColor(palette.getDarkMutedColor(Color.WHITE));
-            }
-            final Palette.Swatch lightMutedSwatch = palette.getLightMutedSwatch();
-	        final int iconBackgroundColor;
-            if (lightMutedSwatch != null) {
-                iconBackgroundColor = lightMutedSwatch.getRgb();
-            } else {
-                iconBackgroundColor = Color.LTGRAY;
-            }
-	        holder.mImageView.setBackgroundColor(iconBackgroundColor);
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -416,6 +403,42 @@ public class GameListActivity extends AppCompatActivity {
 			        return true;
 		        }
 	        });
+        }
+
+        private int setColors(ViewHolder holder, Drawable drawable) {
+            Palette palette = getPalette(drawable);
+            final Palette.Swatch vibrantSwatch = palette.getVibrantSwatch();
+            if (vibrantSwatch != null) {
+                holder.mIdView.setBackgroundColor(vibrantSwatch.getRgb());
+                holder.mIdView.setTextColor(vibrantSwatch.getBodyTextColor());
+            } else {
+                holder.mIdView.setBackgroundColor(
+                        palette.getMutedColor(ContextCompat.getColor(
+                                GameListActivity.this, R.color.colorPrimary)
+                        )
+                );
+                holder.mIdView.setTextColor(palette.getDarkMutedColor(Color.WHITE));
+            }
+            final Palette.Swatch lightMutedSwatch = palette.getLightMutedSwatch();
+            final int iconBackgroundColor;
+            if (lightMutedSwatch != null) {
+                iconBackgroundColor = lightMutedSwatch.getRgb();
+            } else {
+                iconBackgroundColor = Color.LTGRAY;
+            }
+            holder.mImageView.setBackgroundColor(iconBackgroundColor);
+            return iconBackgroundColor;
+        }
+
+        private Palette getPalette(Drawable drawable) {
+            if (drawable instanceof BitmapDrawable) {
+                return getPalette(((BitmapDrawable) drawable).getBitmap());
+            }
+            return getPalette(BitmapUtil.getBitmap(drawable));
+        }
+
+        private Palette getPalette(Bitmap bitmap) {
+            return Palette.from(bitmap).generate();
         }
 
 		@Override

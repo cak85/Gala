@@ -39,6 +39,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import de.cak85.gala.R;
 import de.cak85.gala.applications.ApplicationItem;
 import de.cak85.gala.applications.ApplicationManager;
+import de.cak85.gala.util.BitmapUtil;
 
 public class DetailsActivity extends AppCompatActivity {
 
@@ -249,7 +250,7 @@ public class DetailsActivity extends AppCompatActivity {
 		final Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
 		Canvas c = new Canvas(bitmap);
 		d.draw(c);
-		c.drawBitmap(((BitmapDrawable) inputDrawable).getBitmap(), bounds, bounds, null);
+		c.drawBitmap(BitmapUtil.getBitmap(inputDrawable), bounds, bounds, null);
 		final BitmapDrawable bitmapDrawable = new BitmapDrawable(context.getResources(), bitmap);
 		//DrawableCompat.setTintMode(bitmapDrawable, PorterDuff.Mode.MULTIPLY);
 		//DrawableCompat.setTint(bitmapDrawable, color);
@@ -271,7 +272,7 @@ public class DetailsActivity extends AppCompatActivity {
 		float iconScaleFactor = ((float) width) / ((float) icon.getMinimumWidth());
 		int scaledIconHeight = (int) (icon.getMinimumHeight() * iconScaleFactor);
 		int diff = (height - scaledIconHeight) / 2;
-		c.drawBitmap(((BitmapDrawable) icon).getBitmap(), icon.getBounds(),
+		c.drawBitmap(BitmapUtil.getBitmap(icon), icon.getBounds(),
 				new Rect(0, diff, width, diff + scaledIconHeight), null);
 		return new BitmapDrawable(context.getResources(), bitmap);
 	}
