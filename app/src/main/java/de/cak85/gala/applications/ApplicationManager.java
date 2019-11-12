@@ -183,17 +183,16 @@ public class ApplicationManager {
 	 */
 	private void setIcon(Context context, ApplicationItem applicationItem)
 			throws PackageManager.NameNotFoundException {
+
 		// Get the application's resources
-		Resources res = null;
-		Configuration originalConfig = null;
-		DisplayMetrics dm = null;
 		PackageManager pm = context.getPackageManager();
 		final ApplicationInfo packageInfo = pm.getApplicationInfo(
 				applicationItem.getPackageName(), PackageManager.GET_META_DATA);
-		res = pm.getResourcesForApplication(packageInfo);
+        Resources res = pm.getResourcesForApplication(packageInfo);
+
 		// Get a copy of the configuration, and set it to the desired resolution
-		Configuration config = res.getConfiguration();
-		originalConfig = new Configuration(config);
+        Configuration config = res.getConfiguration();
+        Configuration originalConfig = new Configuration(config);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
 			config.densityDpi =  DisplayMetrics.DENSITY_XXXHIGH;
 		} else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
@@ -201,15 +200,14 @@ public class ApplicationManager {
 		}
 
 		// Update the configuration with the desired resolution
-		dm = res.getDisplayMetrics();
+        DisplayMetrics dm = res.getDisplayMetrics();
 		res.updateConfiguration(config, dm);
 
 		// Grab the app icon
 		applicationItem.setIcon(packageInfo.loadIcon(pm));
-		if (originalConfig != null) {
-			// Set our configuration back to what it was
-			res.updateConfiguration(originalConfig, dm);
-		}
+
+        // Set our configuration back to what it was
+        res.updateConfiguration(originalConfig, dm);
 	}
 
 	public void save(Context context) {
@@ -250,7 +248,8 @@ public class ApplicationManager {
 		asyncTask.execute();
 	}
 
-	private class InstalledGamesFinderTask extends AsyncTask<Void, Void, List<ApplicationItem>> {
+    private static class InstalledGamesFinderTask
+            extends AsyncTask<Void, Void, List<ApplicationItem>> {
 
 		private final AsyncTaskListener<List<ApplicationItem>, Void> listener;
 		private Context context;
@@ -259,7 +258,7 @@ public class ApplicationManager {
 			return context;
 		}
 
-		public InstalledGamesFinderTask(Context context,
+		InstalledGamesFinderTask(Context context,
 		                                AsyncTaskListener<List<ApplicationItem>, Void> listener) {
 			this.context = context;
 			this.listener = listener;

@@ -88,7 +88,7 @@ public class GameListActivity extends AppCompatActivity {
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
 
-        Toolbar mActionBarToolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar mActionBarToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mActionBarToolbar);
         mActionBarToolbar.setTitle(getResources().getString(R.string.app_name));
     }
@@ -265,7 +265,6 @@ public class GameListActivity extends AppCompatActivity {
 
         private final List<ApplicationItem> mValues;
 	    private Context context;
-		private float density;
 		private long keyDownTime;
 
 		private SimpleItemRecyclerViewAdapter(List<ApplicationItem> items) {
@@ -273,6 +272,7 @@ public class GameListActivity extends AppCompatActivity {
         }
 
         @Override
+        @NonNull
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 	        context = parent.getContext();
 	        View view = LayoutInflater.from(context)
@@ -441,7 +441,7 @@ public class GameListActivity extends AppCompatActivity {
             return Palette.from(bitmap).generate();
         }
 
-		@Override
+        @Override
         public int getItemCount() {
             return mValues.size();
         }
@@ -469,12 +469,12 @@ public class GameListActivity extends AppCompatActivity {
             private ViewHolder(View view) {
                 super(view);
                 mView = view;
-                mImageView = (ImageView) view.findViewById(R.id.image);
-                mIdView = (TextView) view.findViewById(R.id.title);
-//                mContentView = (TextView) view.findViewById(R.title.content);
+                mImageView = view.findViewById(R.id.image);
+                mIdView = view.findViewById(R.id.title);
             }
 
             @Override
+            @NonNull
             public String toString() {
                 return super.toString() + " '" + mIdView.getText() + "'";
             }

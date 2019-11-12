@@ -9,6 +9,8 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.DisplayMetrics;
 
+import androidx.annotation.NonNull;
+
 import de.cak85.gala.R;
 
 
@@ -20,10 +22,11 @@ public class ApplicationItem {
 	private String title;
 	private String description;
 
-	public ApplicationItem(Context context, ApplicationInfo packageInfo, PackageManager pm) {
+	ApplicationItem(Context context, @NonNull ApplicationInfo packageInfo,
+                    @NonNull PackageManager pm) {
 		// Get the application's resources
 		Resources res = null;
-		Drawable icon = null;
+		Drawable icon;
 		Configuration originalConfig = null;
 		DisplayMetrics dm = null;
 		try {
@@ -70,17 +73,13 @@ public class ApplicationItem {
 		return icon;
 	}
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-
-		ApplicationItem gameItem = (ApplicationItem) o;
-
-		return !(packageName != null ? !packageName.equals(gameItem.packageName) : gameItem
-				.packageName != null);
-
-	}
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ApplicationItem that = (ApplicationItem) o;
+        return packageName.equals(that.packageName);
+    }
 
 	@Override
 	public int hashCode() {
@@ -92,6 +91,7 @@ public class ApplicationItem {
 	}
 
 	@Override
+    @NonNull
 	public String toString() {
 		return "ApplicationItem{" +
 				"name='" + name + '\'' +
@@ -99,11 +99,11 @@ public class ApplicationItem {
 				'}';
 	}
 
-	public void setDescription(String description) {
+	void setDescription(String description) {
 		this.description = description;
 	}
 
-	public void setIcon(Drawable icon) {
+	void setIcon(Drawable icon) {
 		this.icon = icon;
 	}
 
