@@ -184,7 +184,7 @@ public class DetailsActivity extends AppCompatActivity {
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				fab.setVisibility(View.GONE);
+				fab.hide();
 			}
 		});
 		transitionDrawable.reverseTransition(TRANSITION_REVERSE_MILLIS);
