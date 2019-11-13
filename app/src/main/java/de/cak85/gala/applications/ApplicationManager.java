@@ -407,13 +407,19 @@ public class ApplicationManager {
 					}
 					image = getImage(context, app, 100, -1);
 				}
-				if (!checkedCategory || image == null || description == null) {
+
+                InputStream inputStream;
                 try {
                     URL url = new URL(context.getString(R.string.scrapepage)
                             + getCleanPackageName(app));
                     URLConnection urlConnection = url.openConnection();
-						BufferedReader bufferedReader = new BufferedReader(
-								new InputStreamReader(urlConnection.getInputStream()));
+                    inputStream = urlConnection.getInputStream();
+                } catch (IOException e) {
+                    System.err.println("could not find " + packageName + ".");
+                    continue;
+                }
+                try (BufferedReader bufferedReader =
+                             new BufferedReader(new InputStreamReader(inputStream))) {
                     String line;
                     while ((line = bufferedReader.readLine()) != null) {
                         if (image == null
@@ -451,10 +457,10 @@ public class ApplicationManager {
                             checkedCategory = true;
                         }
                     }
-						bufferedReader.close();
-					} catch (Exception e) {
-						System.err.println("could not find " + packageName + ".");
-					}
+                } catch (IOException e) {
+                    System.err.println("An error occured for " + packageName + ": "
+                            + e.getLocalizedMessage());
+                    continue;
                 }
 				if (scrapeOnlyGames && !isGame) {
 					continue;
