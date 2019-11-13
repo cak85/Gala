@@ -434,17 +434,14 @@ public class ApplicationManager {
 								description = description.substring(description.indexOf("=") + 2);
                                 description = StringEscapeUtils.unescapeHtml4(description);
 							}
-							if (!checkedCategory
-									&& line.contains("class=\"document-subtitle category\"")) {
-								int index = line.indexOf("class=\"document-subtitle category\"");
-								if (index > -1) {
-									String category = line.substring(index);
-									category = category.substring(category.indexOf("href") + 6);
-									category = category.substring(0, category.indexOf("\""));
-									isGame = category.toLowerCase().contains("game");
-									dbHelper.saveCategory(packageName, isGame);
-									checkedCategory = true;
-								}
+							if (!checkedCategory && line.contains("itemprop=\"genre\"")) {
+								int index = line.indexOf("itemprop=\"genre\"");
+                                String category = line.substring(index);
+                                category = category.substring(category.indexOf("href") + 6);
+                                category = category.substring(0, category.indexOf("\""));
+                                isGame = category.toLowerCase().contains("game");
+                                dbHelper.saveCategory(packageName, isGame);
+                                checkedCategory = true;
 							}
 						}
 						bufferedReader.close();
