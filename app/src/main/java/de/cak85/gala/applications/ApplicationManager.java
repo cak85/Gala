@@ -21,6 +21,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
 
+import org.apache.commons.text.StringEscapeUtils;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -408,9 +410,9 @@ public class ApplicationManager {
 						String line;
 						while ((line = bufferedReader.readLine()) != null) {
 							if (image == null
-									&& line.contains("data-expand-to=\"full-screenshot-0\"")) {
+									&& line.contains("data-screenshot-item")) {
 								String imageSource = line.substring(
-										line.indexOf("data-expand-to=\"full-screenshot-0\""));
+										line.indexOf("data-screenshot-item"));
 								imageSource = imageSource.substring(imageSource.indexOf("src=\"")
 										+ 5);
 								imageSource = imageSource.substring(0, imageSource.indexOf("="));
@@ -419,20 +421,18 @@ public class ApplicationManager {
 								InputStream in = new URL(imageSource).openStream();
 								image = BitmapFactory.decodeStream(in);
 							}
-							if (title == null && line.contains("</title>")) {
-								title = line.substring(line.indexOf("</title>"));
-								title = title.substring(0, title.indexOf("description"));
-								title = title.substring(title.indexOf("content=\"")
-										+ "content=\"".length());
-								title = title.substring(0, title.indexOf("\""));
+							if (title == null && line.contains("main-title")) {
+								title = line.substring(line.indexOf("main-title"));
+								title = title.substring(title.indexOf(">") + 1,
+                                        title.indexOf("</title>"));
+                                title = StringEscapeUtils.unescapeHtml4(title);
 							}
 							if (description == null && line.contains("itemprop=\"description\"")) {
 								description =
 										line.substring(line.indexOf("itemprop=\"description\""));
-								description = description.substring(description.indexOf("div"));
-								description = description.substring(description.indexOf(">") + 1);
-								description = description.substring(0,
-										description.indexOf("</div>"));
+								description = description.substring(description.indexOf("content"));
+								description = description.substring(description.indexOf("=") + 2);
+                                description = StringEscapeUtils.unescapeHtml4(description);
 							}
 							if (!checkedCategory
 									&& line.contains("class=\"document-subtitle category\"")) {
