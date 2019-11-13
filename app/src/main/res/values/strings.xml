@@ -48,4 +48,5 @@
     <string name="pref_key_user_interface_orientation" translatable="false">pref_key_user_interface_orientation</string>
     <string name="pref_user_interface_orientation_sum">The screen is in %1$s orientation.</string>
     <string name="pref_user_interface_orientation_title">Screen orientation</string>
+    <string name="pref_key_current_version" translatable="false">pref_key_current_version</string>
 </resources>

@@ -1,5 +1,6 @@
 package de.cak85.gala.launcher;
 
+import android.app.ActivityManager;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
@@ -7,6 +8,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -54,10 +57,11 @@ import de.cak85.gala.util.BitmapUtil;
 
 public class GameListActivity extends AppCompatActivity {
 
-	private static final int EDIT_GAMES_REQUEST = 1;
+    private static final int EDIT_GAMES_REQUEST = 1;
 	public static final String DEFAULT_SPACING = "4dp";
 	private static final int SHOW_PREFERENCES_REQUEST = 2;
 	private static final String DEFAULT_HEIGHT = "64dp";
+    public static final String DEFAULT_VERSION = "-1";
 
 	/**
 	 * Icon background color is given to DetailsActivity using this constant.
@@ -69,7 +73,7 @@ public class GameListActivity extends AppCompatActivity {
 	 */
 	public static final String INTENT_PACKAGE_NAME = "packageName";
 
-	private SimpleItemRecyclerViewAdapter mAdapter;
+    private SimpleItemRecyclerViewAdapter mAdapter;
 	private int spacing;
 	private int height;
 	private boolean showShadow;
@@ -79,6 +83,8 @@ public class GameListActivity extends AppCompatActivity {
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        checkNewVersion();
 
 		reloadPreferences();
 
@@ -91,6 +97,60 @@ public class GameListActivity extends AppCompatActivity {
         Toolbar mActionBarToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mActionBarToolbar);
         mActionBarToolbar.setTitle(getResources().getString(R.string.app_name));
+    }
+
+    private void checkNewVersion() {
+        if (isSpecificNewVersion()) {
+            if (Build.VERSION_CODES.KITKAT <= Build.VERSION.SDK_INT) {
+                final ActivityManager systemService =
+                        (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+                if (systemService != null) {
+                    systemService.clearApplicationUserData();
+                }
+            } else {
+                // old hacky way
+                try {
+                    Runtime runtime = Runtime.getRuntime();
+                    runtime.exec("pm clear " + getApplicationContext().getPackageName());
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private void saveVersion(String version) {
+        SharedPreferences.Editor prefEditor =
+                PreferenceManager.getDefaultSharedPreferences(this).edit();
+        prefEditor.putString(getString(R.string.pref_key_current_version), version);
+        prefEditor.apply();
+    }
+
+    public boolean isSpecificNewVersion() {
+        String newVersion = DEFAULT_VERSION;
+        PackageInfo info;
+
+        PackageManager manager = getPackageManager();
+        try {
+            info = manager.getPackageInfo(getPackageName(), 0);
+            newVersion = info.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            // TODO what to do?
+        }
+        String oldVersion = getVersionString();
+        saveVersion(newVersion);
+
+        // return whether new version
+        // 1.1.7: Fixed web scraping
+        return newVersion.equals("1.1.7")
+                && !(oldVersion.equals(DEFAULT_VERSION) || oldVersion.equals(newVersion));
+    }
+
+    public String getVersionString() {
+        final SharedPreferences preferences =
+                PreferenceManager.getDefaultSharedPreferences(this);
+        return preferences.getString(getString(R.string.pref_key_current_version), DEFAULT_VERSION);
     }
 
 	@Override
