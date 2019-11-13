@@ -1,5 +1,8 @@
 <component name="ProjectCodeStyleConfiguration">
   <code_scheme name="Project" version="173">
+    <AndroidXmlCodeStyleSettings>
+      <option name="ARRANGEMENT_SETTINGS_MIGRATED_TO_191" value="true" />
+    </AndroidXmlCodeStyleSettings>
     <JavaCodeStyleSettings>
       <option name="IMPORT_LAYOUT_TABLE">
         <value>
@@ -27,6 +30,10 @@
     <XML>
       <option name="XML_LEGACY_SETTINGS_IMPORTED" value="true" />
     </XML>
+    <codeStyleSettings language="JAVA">
+      <option name="ALIGN_MULTILINE_PARAMETERS" value="false" />
+      <option name="METHOD_PARAMETERS_WRAP" value="1" />
+    </codeStyleSettings>
     <codeStyleSettings language="XML">
       <indentOptions>
         <option name="CONTINUATION_INDENT_SIZE" value="4" />
@@ -38,7 +45,8 @@
               <match>
                 <AND>
                   <NAME>xmlns:android</NAME>
-                  <XML_NAMESPACE>Namespace:</XML_NAMESPACE>
+                  <XML_ATTRIBUTE />
+                  <XML_NAMESPACE>^$</XML_NAMESPACE>
                 </AND>
               </match>
             </rule>
@@ -48,7 +56,8 @@
               <match>
                 <AND>
                   <NAME>xmlns:.*</NAME>
-                  <XML_NAMESPACE>Namespace:</XML_NAMESPACE>
+                  <XML_ATTRIBUTE />
+                  <XML_NAMESPACE>^$</XML_NAMESPACE>
                 </AND>
               </match>
               <order>BY_NAME</order>
@@ -59,6 +68,7 @@
               <match>
                 <AND>
                   <NAME>.*:id</NAME>
+                  <XML_ATTRIBUTE />
                   <XML_NAMESPACE>http://schemas.android.com/apk/res/android</XML_NAMESPACE>
                 </AND>
               </match>
@@ -69,6 +79,7 @@
               <match>
                 <AND>
                   <NAME>.*:name</NAME>
+                  <XML_ATTRIBUTE />
                   <XML_NAMESPACE>http://schemas.android.com/apk/res/android</XML_NAMESPACE>
                 </AND>
               </match>
@@ -79,6 +90,7 @@
               <match>
                 <AND>
                   <NAME>name</NAME>
+                  <XML_ATTRIBUTE />
                   <XML_NAMESPACE>^$</XML_NAMESPACE>
                 </AND>
               </match>
@@ -89,6 +101,7 @@
               <match>
                 <AND>
                   <NAME>style</NAME>
+                  <XML_ATTRIBUTE />
                   <XML_NAMESPACE>^$</XML_NAMESPACE>
                 </AND>
               </match>
@@ -99,6 +112,7 @@
               <match>
                 <AND>
                   <NAME>.*</NAME>
+                  <XML_ATTRIBUTE />
                   <XML_NAMESPACE>^$</XML_NAMESPACE>
                 </AND>
               </match>
@@ -109,53 +123,12 @@
             <rule>
               <match>
                 <AND>
-                  <NAME>.*:layout_width</NAME>
+                  <NAME>.*</NAME>
+                  <XML_ATTRIBUTE />
                   <XML_NAMESPACE>http://schemas.android.com/apk/res/android</XML_NAMESPACE>
                 </AND>
               </match>
-            </rule>
-          </section>
-          <section>
-            <rule>
-              <match>
-                <AND>
-                  <NAME>.*:layout_height</NAME>
-                  <XML_NAMESPACE>http://schemas.android.com/apk/res/android</XML_NAMESPACE>
-                </AND>
-              </match>
-            </rule>
-          </section>
-          <section>
-            <rule>
-              <match>
-                <AND>
-                  <NAME>.*:layout_.*</NAME>
-                  <XML_NAMESPACE>http://schemas.android.com/apk/res/android</XML_NAMESPACE>
-                </AND>
-              </match>
-              <order>BY_NAME</order>
-            </rule>
-          </section>
-          <section>
-            <rule>
-              <match>
-                <AND>
-                  <NAME>.*:width</NAME>
-                  <XML_NAMESPACE>http://schemas.android.com/apk/res/android</XML_NAMESPACE>
-                </AND>
-              </match>
-              <order>BY_NAME</order>
-            </rule>
-          </section>
-          <section>
-            <rule>
-              <match>
-                <AND>
-                  <NAME>.*:height</NAME>
-                  <XML_NAMESPACE>http://schemas.android.com/apk/res/android</XML_NAMESPACE>
-                </AND>
-              </match>
-              <order>BY_NAME</order>
+              <order>ANDROID_ATTRIBUTE_ORDER</order>
             </rule>
           </section>
           <section>
@@ -163,17 +136,7 @@
               <match>
                 <AND>
                   <NAME>.*</NAME>
-                  <XML_NAMESPACE>http://schemas.android.com/apk/res/android</XML_NAMESPACE>
-                </AND>
-              </match>
-              <order>BY_NAME</order>
-            </rule>
-          </section>
-          <section>
-            <rule>
-              <match>
-                <AND>
-                  <NAME>.*</NAME>
+                  <XML_ATTRIBUTE />
                   <XML_NAMESPACE>.*</XML_NAMESPACE>
                 </AND>
               </match>
