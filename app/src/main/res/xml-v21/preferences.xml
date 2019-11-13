@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/general_settings_category">
+        <CheckBoxPreference
+            android:key="@string/pref_key_general_start_immediately"
+            android:summaryOff="@string/pref_key_general_start_immediately_sum_false"
+            android:summaryOn="@string/pref_key_general_start_immediately_sum_true"
+            android:title="@string/pref_key_general_start_immediately_title"
+            android:defaultValue="false"/>
+    </PreferenceCategory>
     <PreferenceCategory android:title="@string/user_interface_settings_category">
         <ListPreference
             android:key="@string/pref_key_user_interface_orientation"

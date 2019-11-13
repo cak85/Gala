@@ -78,6 +78,7 @@ public class GameListActivity extends AppCompatActivity {
 	private int height;
 	private boolean showShadow;
 	private boolean showDownloadedImages;
+    private boolean quickStart;
 	private int columns;
 
 	@Override
@@ -86,7 +87,7 @@ public class GameListActivity extends AppCompatActivity {
 
         checkNewVersion();
 
-		reloadPreferences();
+        reloadPreferences();
 
 		setContentView(R.layout.activity_game_list);
 
@@ -183,6 +184,8 @@ public class GameListActivity extends AppCompatActivity {
 		columns = Integer.valueOf(sharedPreferences.getString(
 				getString(R.string.pref_key_user_interface_num_columns),
 				String.valueOf(getResources().getInteger(R.integer.num_grids))));
+        quickStart = sharedPreferences.getBoolean(
+                getString(R.string.pref_key_general_start_immediately), false);
 		//noinspection WrongConstant
 		setRequestedOrientation(Integer.valueOf(sharedPreferences.getString(
 				getString(R.string.pref_key_user_interface_orientation),
@@ -408,18 +411,46 @@ public class GameListActivity extends AppCompatActivity {
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-	                Intent myIntent = new Intent(GameListActivity.this, DetailsActivity.class);
-	                myIntent.putExtra(INTENT_PACKAGE_NAME, holder.mItem.getPackageName());
-	                myIntent.putExtra(INTENT_ICON_BACKGROUND_COLOR, iconBackgroundColor);
-	                ActivityOptionsCompat options = ActivityOptionsCompat.
-			                makeSceneTransitionAnimation(
-					                GameListActivity.this, holder.mImageView,
-					                "details");
-	                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-		                GameListActivity.this.startActivity(myIntent, options.toBundle());
-	                } else {
-		                GameListActivity.this.startActivity(myIntent);
-	                }
+                    if (quickStart) {
+                        startGame();
+                    } else {
+                        startDetailsActivity();
+                    }
+                }
+
+                private void startGame() {
+                    FragmentManager fm = getFragmentManager();
+                    FragmentTransaction ft = fm.beginTransaction();
+                    StartScreenFragment f = new StartScreenFragment();
+
+                    f.setBackgroundColor(ContextCompat.getColor(GameListActivity.this,
+                            R.color.colorPrimary));
+                    f.setTextColor(ContextCompat.getColor(GameListActivity.this,
+                            android.R.color.white));
+                    f.setGameItem(holder.mItem);
+                    final View view = holder.mImageView;
+                    int[] location = new int[2];
+                    view.getLocationOnScreen(location);
+                    f.setCoordinates(location[0] + view.getWidth() / 2,
+                            (int) location[1] + view.getHeight() / 2);
+                    ft.replace(android.R.id.content, f, "tag");
+                    ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                    ft.commit();
+                }
+
+                private void startDetailsActivity() {
+                    Intent myIntent = new Intent(GameListActivity.this, DetailsActivity.class);
+                    myIntent.putExtra(INTENT_PACKAGE_NAME, holder.mItem.getPackageName());
+                    myIntent.putExtra(INTENT_ICON_BACKGROUND_COLOR, iconBackgroundColor);
+                    ActivityOptionsCompat options = ActivityOptionsCompat.
+                            makeSceneTransitionAnimation(
+                                    GameListActivity.this, holder.mImageView,
+                                    "details");
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                        GameListActivity.this.startActivity(myIntent, options.toBundle());
+                    } else {
+                        GameListActivity.this.startActivity(myIntent);
+                    }
                 }
             });
 	        holder.mView.setOnKeyListener(new View.OnKeyListener() {

@@ -3,6 +3,7 @@ package de.cak85.gala.launcher;
 
 import android.animation.Animator;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.Color;
@@ -71,9 +72,13 @@ public class StartScreenFragment extends Fragment {
 			@Override
 			public void run() {
 				try {
-					Intent launchIntent = getActivity().getPackageManager()
+                    final Activity activity = getActivity();
+                    Intent launchIntent = activity.getPackageManager()
 							.getLaunchIntentForPackage(gameItem.getPackageName());
-					getActivity().finish();
+
+					if (activity instanceof DetailsActivity) {
+					    activity.finish();
+                    }
 					startActivity(launchIntent);
 				} catch (NullPointerException e) {}
 			}

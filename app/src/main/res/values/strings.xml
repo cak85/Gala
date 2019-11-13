@@ -49,6 +49,11 @@
     <string name="pref_user_interface_orientation_sum">The screen is in %1$s orientation.</string>
     <string name="pref_user_interface_orientation_title">Screen orientation</string>
     <string name="pref_key_current_version" translatable="false">pref_key_current_version</string>
-    <string name="alert_clear_data_title">Reset of application data required</string>
+    <string name="alert_clear_data_title">Reset of application data required</string>pref_key_user_interface_height
     <string name="alert_clear_data_message">The latest update fixes major problems with the game list items. Unfortunately, the application data have to be cleared. The application then closes automatically and can be reopened afterwards.</string>
+    <string name="general_settings_category">General</string>
+    <string name="pref_key_general_start_immediately" translatable="false">pref_key_general_start_immediately</string>
+    <string name="pref_key_general_start_immediately_sum_false">Clicking a game entry opens a details view.</string>
+    <string name="pref_key_general_start_immediately_sum_true">Clicking a game entry directly starts the game.</string>
+    <string name="pref_key_general_start_immediately_title">Click Behaviour</string>
 </resources>

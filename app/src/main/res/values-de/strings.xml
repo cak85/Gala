@@ -40,4 +40,8 @@
     <string name="pref_user_interface_orientation_title">Bildschirmorientierung</string>
     <string name="alert_clear_data_title">Zurücksetzen der Anwendungsdaten erforderlich!</string>
     <string name="alert_clear_data_message">Das neueste Update behebt größere Probleme mit den Elementen der Spielliste. Leider müssen die Anwendungsdaten gelöscht werden. Danach schließt sich die Anwendung von selbst und kann danach wieder geöffnet werden.</string>
+    <string name="general_settings_category">Allgemein</string>
+    <string name="pref_key_general_start_immediately_sum_false">Anklicken eines Spieleintrags öffnet eine Detailansicht.</string>
+    <string name="pref_key_general_start_immediately_sum_true">Anklicken eines Spieleintrags startet sofort das Spiel.</string>
+    <string name="pref_key_general_start_immediately_title">Anklickverhalten</string>
 </resources>
