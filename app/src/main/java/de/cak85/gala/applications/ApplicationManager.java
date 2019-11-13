@@ -17,6 +17,9 @@ import android.text.Html;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
@@ -28,6 +31,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
@@ -58,6 +62,7 @@ public class ApplicationManager {
 
 	private static ApplicationManager ourInstance = new ApplicationManager();
 
+	@NonNull
 	public static ApplicationManager getInstance() {
 		return ourInstance;
 	}
@@ -65,11 +70,13 @@ public class ApplicationManager {
 	private ApplicationManager() {
 	}
 
+	@NonNull
 	public List<ApplicationItem> getGames() {
 		return games;
 	}
 
-	public ApplicationItem getGame(String packageName) {
+	@Nullable
+	public ApplicationItem getGame(@Nullable String packageName) {
 		for (ApplicationItem app : games) {
 			if (app.getPackageName().equals(packageName)) {
 				return app;
@@ -78,7 +85,7 @@ public class ApplicationManager {
 		return null;
 	}
 
-	public void load(Context context) {
+	public void load(@NonNull Context context) {
 		if (!games.isEmpty()) {
 			return;
 		}
@@ -110,7 +117,8 @@ public class ApplicationManager {
 		}
 	}
 
-	public Bitmap getImage(Context context, ApplicationItem applicationItem,
+	@Nullable
+	public Bitmap getImage(@NonNull Context context, @NonNull ApplicationItem applicationItem,
 	                       int width, int height) {
 		try {
 			ContextWrapper cw = new ContextWrapper(context);
@@ -212,7 +220,7 @@ public class ApplicationManager {
         res.updateConfiguration(originalConfig, dm);
 	}
 
-	public void save(Context context) {
+	public void save(@NonNull Context context) {
 		Gson gson = new Gson();
 		String jsonCurProduct = gson.toJson(games);
 
@@ -244,8 +252,8 @@ public class ApplicationManager {
 		}
 	}
 
-	public void getInstalledApplications(Context context,
-		    AsyncTaskListener<List<ApplicationItem>, Void> listener) {
+	public void getInstalledApplications(@NonNull Context context,
+			@NonNull AsyncTaskListener<List<ApplicationItem>, Void> listener) {
 		final InstalledGamesFinderTask asyncTask = new InstalledGamesFinderTask(context, listener);
 		asyncTask.execute();
 	}
@@ -294,17 +302,15 @@ public class ApplicationManager {
 		}
 	}
 
-	public void retrieveInfos(final Context context,
-	                          final int imageWidth,
-	                          final ApplicationItem applicationItem,
-	                          final AsyncTaskListener<List<ApplicationItem>, String> listener) {
+	public void retrieveInfos(final @NonNull Context context, final int imageWidth,
+			final @NonNull ApplicationItem applicationItem,
+			final @Nullable AsyncTaskListener<List<ApplicationItem>, String> listener) {
 		final RetrieveInfosTask asyncTask = new RetrieveInfosTask(context, imageWidth, false, listener);
 		asyncTask.execute(applicationItem);
 	}
 
-	public void autoDiscoverGames(final Context context,
-	                        final int imageWidth,
-	                        final AsyncTaskListener<List<ApplicationItem>, String> listener) {
+	public void autoDiscoverGames(final @NonNull Context context, final int imageWidth,
+			final @Nullable AsyncTaskListener<List<ApplicationItem>, String> listener) {
 		// we start the getInstalledApplications(...) method, and listen for it to finish.
 		// Then we start the scrape task to retrieve the games.
 		Runnable r = new Runnable() {
@@ -345,7 +351,9 @@ public class ApplicationManager {
 
 									@Override
 									public void onPostExecute(List<ApplicationItem> param) {
-										games.clear();
+                                        final List<ApplicationItem> games = getGames();
+
+                                        games.clear();
 										games.addAll(param);
 										if (progressDialog != null && progressDialog.isShowing()) {
 											progressDialog.dismiss();
@@ -354,7 +362,7 @@ public class ApplicationManager {
 											listener.onPostExecute(param);
 									}
 								});
-						asyncTask.execute(apps.toArray(new ApplicationItem[apps.size()]));
+                        asyncTask.execute(apps.toArray(new ApplicationItem[]{}));
 					}
 				});
 			}
@@ -370,7 +378,7 @@ public class ApplicationManager {
 		private AsyncTaskListener<List<ApplicationItem>, String> listener;
 		private boolean scrapeOnlyGames;
 
-		public RetrieveInfosTask(Context context, int imageWidth, boolean scrapeOnlyGames,
+		RetrieveInfosTask(Context context, int imageWidth, boolean scrapeOnlyGames,
 		                         AsyncTaskListener<List<ApplicationItem>, String> listener) {
 			this.context = context;
 			this.imageWidth = imageWidth;
@@ -390,10 +398,9 @@ public class ApplicationManager {
 				Bitmap image = null;
 				String description = null;
 				String title = null;
-				// if we have saved the
 				final String packageName = app.getPackageName();
 				boolean checkedCategory = categories.containsKey(packageName);
-				boolean isGame = checkedCategory ? categories.get(packageName) : false;
+                boolean isGame = checkedCategory ? categories.get(packageName) : false;
 				if (checkedCategory) {
 					if (scrapeOnlyGames && !isGame) {
 						continue;
@@ -401,54 +408,54 @@ public class ApplicationManager {
 					image = getImage(context, app, 100, -1);
 				}
 				if (!checkedCategory || image == null || description == null) {
-					try {
-						URL url = new URL(context.getString(R.string.scrapepage)
-								+ getCleanPackageName(app));
-						URLConnection urlConnection = url.openConnection();
+                try {
+                    URL url = new URL(context.getString(R.string.scrapepage)
+                            + getCleanPackageName(app));
+                    URLConnection urlConnection = url.openConnection();
 						BufferedReader bufferedReader = new BufferedReader(
 								new InputStreamReader(urlConnection.getInputStream()));
-						String line;
-						while ((line = bufferedReader.readLine()) != null) {
-							if (image == null
-									&& line.contains("data-screenshot-item")) {
-								String imageSource = line.substring(
-										line.indexOf("data-screenshot-item"));
-								imageSource = imageSource.substring(imageSource.indexOf("src=\"")
-										+ 5);
-								imageSource = imageSource.substring(0, imageSource.indexOf("="));
-								imageSource = (imageSource.contains("http") ? "" : "https:")
-										+ imageSource + "=w" + imageWidth;
-								InputStream in = new URL(imageSource).openStream();
-								image = BitmapFactory.decodeStream(in);
-							}
-							if (title == null && line.contains("main-title")) {
-								title = line.substring(line.indexOf("main-title"));
-								title = title.substring(title.indexOf(">") + 1,
-                                        title.indexOf("</title>"));
-                                title = StringEscapeUtils.unescapeHtml4(title);
-							}
-							if (description == null && line.contains("itemprop=\"description\"")) {
-								description =
-										line.substring(line.indexOf("itemprop=\"description\""));
-								description = description.substring(description.indexOf("content"));
-								description = description.substring(description.indexOf("=") + 2);
-                                description = StringEscapeUtils.unescapeHtml4(description);
-							}
-							if (!checkedCategory && line.contains("itemprop=\"genre\"")) {
-								int index = line.indexOf("itemprop=\"genre\"");
-                                String category = line.substring(index);
-                                category = category.substring(category.indexOf("href") + 6);
-                                category = category.substring(0, category.indexOf("\""));
-                                isGame = category.toLowerCase().contains("game");
-                                dbHelper.saveCategory(packageName, isGame);
-                                checkedCategory = true;
-							}
-						}
+                    String line;
+                    while ((line = bufferedReader.readLine()) != null) {
+                        if (image == null
+                                && line.contains("data-screenshot-item")) {
+                            String imageSource = line.substring(
+                                    line.indexOf("data-screenshot-item"));
+                            imageSource = imageSource.substring(imageSource.indexOf("src=\"")
+                                    + 5);
+                            imageSource = imageSource.substring(0, imageSource.indexOf("="));
+                            imageSource = (imageSource.contains("http") ? "" : "https:")
+                                    + imageSource + "=w" + imageWidth;
+                            InputStream in = new URL(imageSource).openStream();
+                            image = BitmapFactory.decodeStream(in);
+                        }
+                        if (title == null && line.contains("main-title")) {
+                            title = line.substring(line.indexOf("main-title"));
+                            title = title.substring(title.indexOf(">") + 1,
+                                    title.indexOf("</title>"));
+                            title = StringEscapeUtils.unescapeHtml4(title);
+                        }
+                        if (description == null && line.contains("itemprop=\"description\"")) {
+                            description =
+                                    line.substring(line.indexOf("itemprop=\"description\""));
+                            description = description.substring(description.indexOf("content"));
+                            description = description.substring(description.indexOf("=") + 2);
+                            description = StringEscapeUtils.unescapeHtml4(description);
+                        }
+                        if (!checkedCategory && line.contains("itemprop=\"genre\"")) {
+                            int index = line.indexOf("itemprop=\"genre\"");
+                            String category = line.substring(index);
+                            category = category.substring(category.indexOf("href") + 6);
+                            category = category.substring(0, category.indexOf("\""));
+                            isGame = category.toLowerCase().contains("game");
+                            dbHelper.saveCategory(packageName, isGame);
+                            checkedCategory = true;
+                        }
+                    }
 						bufferedReader.close();
 					} catch (Exception e) {
 						System.err.println("could not find " + packageName + ".");
 					}
-				}
+                }
 				if (scrapeOnlyGames && !isGame) {
 					continue;
 				}
@@ -463,7 +470,7 @@ public class ApplicationManager {
 		}
 
 		Throwable getCause(Throwable e) {
-			Throwable cause = null;
+			Throwable cause;
 			Throwable result = e;
 
 			while(null != (cause = result.getCause())  && (result != cause) ) {

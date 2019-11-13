@@ -63,7 +63,7 @@ public class DetailsActivity extends AppCompatActivity {
 				GameListActivity.INTENT_ICON_BACKGROUND_COLOR, Color.LTGRAY);
 		app = ApplicationManager.getInstance().getGame(packageName);
 
-		setTitle(app.getName());
+		setTitle(app != null ? app.getName() : "ERROR");
 		final ImageView imageView = (ImageView) findViewById(R.id.details_image);
 		Display display = getWindowManager().getDefaultDisplay();
 		Point size = new Point();
