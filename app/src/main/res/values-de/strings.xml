@@ -38,4 +38,6 @@
     <string name="pref_user_interface_show_downloaded_images_title">Zeige heruntergeladene Bilder</string>
     <string name="pref_user_interface_orientation_sum">Der Bildschirm ist in %1$s-Orientierung.</string>
     <string name="pref_user_interface_orientation_title">Bildschirmorientierung</string>
+    <string name="alert_clear_data_title">Zurücksetzen der Anwendungsdaten erforderlich!</string>
+    <string name="alert_clear_data_message">Das neueste Update behebt größere Probleme mit den Elementen der Spielliste. Leider müssen die Anwendungsdaten gelöscht werden. Danach schließt sich die Anwendung von selbst und kann danach wieder geöffnet werden.</string>
 </resources>

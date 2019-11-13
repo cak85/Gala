@@ -48,4 +48,7 @@
     <string name="pref_key_user_interface_orientation" translatable="false">pref_key_user_interface_orientation</string>
     <string name="pref_user_interface_orientation_sum">The screen is in %1$s orientation.</string>
     <string name="pref_user_interface_orientation_title">Screen orientation</string>
+    <string name="pref_key_current_version" translatable="false">pref_key_current_version</string>
+    <string name="alert_clear_data_title">Reset of application data required</string>
+    <string name="alert_clear_data_message">The latest update fixes major problems with the game list items. Unfortunately, the application data have to be cleared. The application then closes automatically and can be reopened afterwards.</string>
 </resources>
